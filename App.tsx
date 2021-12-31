@@ -41,14 +41,11 @@ import {
   useRecommendations,
   useAuthorization,
 } from './hooks';
-import { Seeds } from './types';
+
 import FilterSlider from './FilterSlider';
+import Item from './Item';
 import NavBar from './NavBar';
 import LogOut from './LogOut';
-
-type ItemProps = {
-  item: Track | Artist;
-};
 
 const SearchField: FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -91,39 +88,6 @@ const SearchField: FC = () => {
         </InputRightElement>
       </InputGroup>
     </form>
-  );
-};
-
-const Item: React.FC<ItemProps> = ({ item }) => {
-  const [seeds, select] = useSeeds();
-  const [view] = useView();
-
-  const isSeed = seeds.has(item.uri);
-  return (
-    <Flex minWidth="80vw" flex="1" direction="row" m={2}>
-      <Button onClick={select(item)} width="100%">
-        {isSeed && (
-          <Checkbox mr={2} onChange={select(item)} isChecked={isSeed} />
-        )}
-        {!isSeed && view === 'tune' && <ChevronUpIcon />}
-        <Box flex={1}>
-          <Box>
-            <Text fontSize={18} color="gray.900">
-              {item.name}
-            </Text>
-          </Box>
-          <Box flex={1}>
-            <Text fontSize={14} color="gray.600">
-              {item.type === 'artist'
-                ? ' (artist)'
-                : ` ${(item as Track).artists[0].name}`}
-            </Text>
-          </Box>
-        </Box>
-
-        {!isSeed && view !== 'tune' && <ChevronRightIcon />}
-      </Button>
-    </Flex>
   );
 };
 
@@ -264,11 +228,13 @@ const App: React.FC = () => {
       )}
       {view === 'tune' && (
         <VStack>
-          {Array.from(seeds)
-            .map((uri) => cacheGet(uri))
-            .map((item) => (
-              <Item {...{ select, seeds, item }} />
-            ))}
+          <HStack spacing="2px" wrap="wrap">
+            {Array.from(seeds)
+              .map((uri) => cacheGet(uri))
+              .map((item) => (
+                <Item {...{ select, seeds, item }} />
+              ))}
+          </HStack>
           {filters.map((filter) => (
             <FilterSlider filter={filter} {...{ sliders, setSliders }} />
           ))}

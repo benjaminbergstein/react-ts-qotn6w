@@ -101,8 +101,7 @@ export const useSeeds = (): [
         }
       }
       setSeedsArr(Array.from(seeds));
-      if (seeds.size > 0 && view === 'start') {
-        alert('vu');
+      if (seeds.size > 0 && view !== 'start') {
         setView('tune');
       }
     };
