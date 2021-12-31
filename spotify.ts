@@ -158,3 +158,5 @@ export const getTokenFromUrl = () => {
   );
   return url.searchParams.get('access_token');
 };
+
+export const whoami = async () => fetch('/v1/me');

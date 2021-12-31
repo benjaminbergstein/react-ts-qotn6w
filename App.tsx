@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {
   InputGroup,
   InputLeftElement,
@@ -31,9 +31,11 @@ import {
   useSearch,
   useCurrentTrack,
   useRecommendations,
+  useAuthorization,
 } from './hooks';
 import { Seeds } from './types';
 import FilterSlider from './FilterSlider';
+import NavBar from './NavBar';
 
 type ItemProps = {
   select: (item: Track | Artist) => void;
@@ -84,6 +86,7 @@ const App: React.FC = () => {
 
   const [sliders, setSliders] = useSliders();
 
+  useAuthorization();
   useCaptureToken();
 
   const currentTrack = useCurrentTrack();
@@ -111,22 +114,32 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <React.Fragment>
-      <a href={getAuthUrl()}>
-        <Button>Authorize</Button>
-      </a>
-      {playlists && (
-        <Select
-          ref={selectRef}
-          onChange={handleSelect}
-          placeholder="— Select a playlist to add to —"
-        >
-          {playlists.map((playlist) => (
-            <option value={JSON.stringify(playlist)}>{playlist.name}</option>
-          ))}
-        </Select>
+    <>
+      <NavBar />
+      {view === 'settings' && (
+        <VStack>
+          <Text fontSize="xs" color="gray.600">
+            Where do you want to add tracks?
+          </Text>
+          <Divider />
+          {playlists && (
+            <Select
+              ref={selectRef}
+              onChange={handleSelect}
+              placeholder="Add to queue"
+            >
+              <optgroup label="Add to playlist:">
+                {playlists.map((playlist) => (
+                  <option value={JSON.stringify(playlist)}>
+                    {playlist.name}
+                  </option>
+                ))}
+              </optgroup>
+            </Select>
+          )}
+        </VStack>
       )}
-      {view === 'search' && (
+      {view === 'authorize' && (
         <VStack spacing="10px">
           <Heading size="xl">Spotify Tuner</Heading>
           <Heading size="m">How does this work?</Heading>
@@ -141,56 +154,69 @@ const App: React.FC = () => {
               check will be added to your queue.
             </Text>
           </VStack>
-          {seeds.size > 0 && (
-            <React.Fragment>
-              <Divider />
-              <Button onClick={() => setView('tune')} type="button">
-                Start tuning ➡
-              </Button>
-            </React.Fragment>
-          )}
-          <Divider />
-          {currentTrack && (
-            <React.Fragment>
-              <Box>
-                <Text>Currently playing</Text>
-              </Box>
-
-              <Box width="100%">
-                <Item {...{ select, seeds, item: currentTrack }} />
-              </Box>
-            </React.Fragment>
-          )}
-          <Divider />
-          <Box>
-            <Text>Or, search</Text>
-          </Box>
-          <form onSubmit={handleSubmit}>
-            <InputGroup>
-              <InputLeftElement pointerEvents="none" />
-              <Input
-                defaultValue={decodeURIComponent(
-                  document.location.hash.replace(/\#/, '')
-                )}
-                ref={inputRef}
-                type="search"
-                placeholder="Search"
-              />
-              <Button type="submit">🔎</Button>
-            </InputGroup>
-          </form>
-
-          {results?.tracks?.items &&
-            results?.tracks?.items.map((track) => (
-              <React.Fragment>
-                <Item {...{ select, seeds, item: track }} />
-                <Item {...{ select, seeds, item: track.artists[0] }} />
-              </React.Fragment>
-            ))}
+          <a href={getAuthUrl()}>
+            <Button>Authorize Spotify</Button>
+          </a>
         </VStack>
       )}
+      {view === 'search' && (
+        <>
+          <Heading p={2} textAlign="left" size="m">
+            Search
+          </Heading>
+
+          <VStack spacing="10px">
+            {seeds.size > 0 && (
+              <>
+                <Divider />
+                <Button onClick={() => setView('tune')} type="button">
+                  Start tuning ➡
+                </Button>
+              </>
+            )}
+            <Divider />
+            {currentTrack && (
+              <>
+                <Box>
+                  <Text>Currently playing</Text>
+                </Box>
+
+                <Box width="100%">
+                  <Item {...{ select, seeds, item: currentTrack }} />
+                </Box>
+              </>
+            )}
+            <Divider />
+            <Box>
+              <Text>Or, search</Text>
+            </Box>
+            <form onSubmit={handleSubmit}>
+              <InputGroup>
+                <InputLeftElement pointerEvents="none" />
+                <Input
+                  defaultValue={decodeURIComponent(
+                    document.location.hash.replace(/\#/, '')
+                  )}
+                  ref={inputRef}
+                  type="search"
+                  placeholder="Search"
+                />
+                <Button type="submit">🔎</Button>
+              </InputGroup>
+            </form>
+
+            {results?.tracks?.items &&
+              results?.tracks?.items.map((track) => (
+                <>
+                  <Item {...{ select, seeds, item: track }} />
+                  <Item {...{ select, seeds, item: track.artists[0] }} />
+                </>
+              ))}
+          </VStack>
+        </>
+      )}
       {view === 'tune' && (
-        <React.Fragment>
+        <>
           <Box>
             <Button onClick={() => setView('search')}>
               &larr; Back to search
@@ -210,9 +236,9 @@ const App: React.FC = () => {
                 <Item {...{ select, seeds, item }} />
               ))}
           </Box>
-        </React.Fragment>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 };
 

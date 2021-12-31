@@ -12,6 +12,7 @@ import {
   SearchResponse,
   SpotifyThing,
   Track,
+  whoami,
 } from './spotify';
 import { Seeds, View, SelectFunctionType } from './types';
 import {
@@ -35,6 +36,9 @@ export const useSliders = () =>
       {} as RecommendFilters
     )
   );
+
+export const useSetting = (setting, defaultValue = undefined) =>
+  useLocalStorageItem(`setting:${setting}`, defaultValue);
 
 export const useView = () => useLocalStorageItem('view', 'search' as View);
 export const useQ = () => useLocalStorageItem<string>('q', '');
@@ -110,9 +114,11 @@ export const useToken = () =>
 
 export const useCaptureToken = () => {
   const [token, setToken] = useToken();
+  const [view, setView] = useView();
   React.useEffect(() => {
     if (/#access_token/.test(document.location.hash)) {
       setToken(getTokenFromUrl());
+      setView('search');
       document.location = '' as unknown as Location;
     }
   }, []);
@@ -141,4 +147,19 @@ export const useRecommendations = () => {
   );
 
   return recommendations;
+};
+
+export const useMe = () => useSWR('me', whoami);
+
+export const useAuthorization = () => {
+  const { data, error, isValidating, ...swr } = useMe();
+  const [view, setView] = useView();
+
+  const isAuthorized = !error && data?.id;
+  React.useEffect(() => {
+    if (isValidating) return;
+    if (!isAuthorized) {
+      setView('authorize');
+    }
+  }, [isAuthorized]);
 };
