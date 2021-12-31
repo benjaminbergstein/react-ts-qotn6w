@@ -32,7 +32,9 @@ const NavBar: FC = () => {
       <HStack spacing="20px" justify="space-between" m="10px">
         <Box>🎶</Box>
         <Box>
-          <Text fontWeight={700}>Spotify tuner</Text>
+          <Text fontWeight={700} textTransform="small-caps">
+            Spotify tuner
+          </Text>
         </Box>
         <Box>
           <Button onClick={() => setNavOpen(!navOpen)} variant="outline">
