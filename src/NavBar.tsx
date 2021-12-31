@@ -32,8 +32,8 @@ const NavBar: FC = () => {
       <HStack spacing="20px" justify="space-between" m="10px">
         <Box>🎶</Box>
         <Box>
-          <Text fontWeight={700} textTransform="small-caps">
-            Spotify tuner
+          <Text fontWeight={700} style={{ fontStyle: 'italic', fontVariant: "small-caps" }}>
+            SpotifyTuner&trade;
           </Text>
         </Box>
         <Box>

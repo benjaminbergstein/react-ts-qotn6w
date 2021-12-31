@@ -2,7 +2,12 @@ import useSWR from 'swr';
 
 const key = (k) => `bb:spotify:mixtape:${k}`;
 
-export const fetch = (k) => JSON.parse(localStorage.getItem(key(k)));
+export const fetch = (k, defaultValue = undefined) => {
+  const v = JSON.parse(localStorage.getItem(key(k)));
+  if (v !== null) return v
+  if (defaultValue === undefined) return defaultValue
+  return store(k, defaultValue)
+}
 
 export const store = (k, item) => {
   localStorage.setItem(key(k), JSON.stringify(item));
@@ -10,8 +15,9 @@ export const store = (k, item) => {
 };
 
 export function useLocalStorageItem<T>(k: string, defaultValue: T) {
+  const fallbackData = fetch(k, defaultValue)
   const swrReturn = useSWR<T>(key(k), () =>
-    Promise.resolve(fetch(k) || store(k, defaultValue))
+    Promise.resolve(fetch(k, defaultValue)), { fallbackData }
   );
 
   function set(item: T);

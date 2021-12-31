@@ -21,6 +21,7 @@ import {
   queueAdd,
   cacheStore,
   playlistAdd,
+  defaultFilters,
 } from './spotify';
 
 import useSWR from 'swr';
@@ -28,19 +29,13 @@ import useSWR from 'swr';
 export const useSliders = () =>
   useLocalStorageItem<RecommendFilters>(
     'sliders',
-    filters.reduce(
-      (acc, filter) => ({
-        ...acc,
-        [filter]: /min/.test(filter) ? 0 : 100,
-      }),
-      {} as RecommendFilters
-    )
+    defaultFilters,
   );
 
 export const useSetting = (setting, defaultValue = undefined) =>
   useLocalStorageItem(`setting:${setting}`, defaultValue);
 
-export const useView = () => useLocalStorageItem('view', 'authorize' as View);
+export const useView = () => useLocalStorageItem('view', 'authorize');
 export const useQ = () => useLocalStorageItem<string>('q', '');
 
 export const useSearch = () => {
@@ -101,8 +96,8 @@ export const useSeeds = (): [
         }
       }
       setSeedsArr(Array.from(seeds));
-      if (seeds.size > 0 && view !== 'start') {
-        setView('tune');
+      if (isDesired && view !== 'tune') {
+        setView('tune')
       }
     };
 
@@ -117,9 +112,9 @@ export const useCaptureToken = () => {
   const [view, setView] = useView();
   React.useEffect(() => {
     if (/#access_token/.test(document.location.hash)) {
-      setToken(getTokenFromUrl());
       setView('start');
-      document.location = '' as unknown as Location;
+      setToken(getTokenFromUrl());
+      document.location.hash = ''
     }
   }, []);
 };
@@ -137,7 +132,7 @@ export const useRecommendations = () => {
   const [seeds] = useSeeds();
   const [sliders] = useSliders();
   const { data: recommendations } = useSWR<RecommendationsResponse>(
-    seeds.size > 0
+    () => seeds.size > 0
       ? [...Array.from(seeds), ...Object.values(sliders)].join(',')
       : null,
     async () => {

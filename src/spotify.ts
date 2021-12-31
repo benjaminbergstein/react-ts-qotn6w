@@ -83,11 +83,18 @@ export const filters = [
   'maxPopularity',
   // 'minLoudness',
   // 'maxLoudness',
-  // 'minValence',
-  // 'maxValence',
-  // 'minTempo',
-  // 'maxTempo',
+  'minValence',
+  'maxValence',
+  'minTempo',
+  'maxTempo',
 ] as const;
+
+export const defaultFilters = filters.reduce(
+  (acc, filter) => ({
+    ...acc,
+    [filter]: /min/.test(filter) ? 0 : 100,
+  }),
+  {} as RecommendFilters)
 
 export type RecommendFilter = typeof filters[number];
 
@@ -96,6 +103,8 @@ export type RecommendFilters = Record<RecommendFilter, number>;
 export const filterScales: Partial<Record<RecommendFilter, number>> = {
   minPopularity: 100,
   maxPopularity: 100,
+  minTempo: 200,
+  maxTempo: 200,
 };
 
 export const recommend = async (

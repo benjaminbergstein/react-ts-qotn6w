@@ -16,6 +16,7 @@ const Item: React.FC<ItemProps> = ({ item }) => {
   const [view] = useView();
 
   const isSeed = seeds.has(item.uri);
+
   return (
     <Flex direction="row" m={2}>
       <Button
