@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "jsx": "react",
     "noEmit": true,
     "target": "es2015",

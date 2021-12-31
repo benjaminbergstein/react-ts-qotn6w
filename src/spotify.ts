@@ -143,13 +143,15 @@ export const playlistAdd = async (playlistId: string, uris: string[]) =>
   });
 
 export const getAuthUrl = () => {
-  return getUrl('accounts.spotify.com', '/authorize', {
+  const url = getUrl('accounts.spotify.com', '/authorize', {
     client_id: 'ab13746019ba4117bbb11e4bf1f606f0',
     response_type: 'token',
-    redirect_uri: `https://${document.location.host}/`,
+    redirect_uri: `${document.location.protocol}//${document.location.host}/`,
     scope:
       'user-modify-playback-state,playlist-modify-private,playlist-modify-public,user-read-currently-playing',
   });
+  console.log(`${document.location.protocol}//${document.location.host}/`)
+  return url
 };
 
 export const getTokenFromUrl = () => {

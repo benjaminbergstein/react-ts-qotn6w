@@ -87,7 +87,7 @@ export const useSeeds = (): [
   const seeds = new Set(seedsArr);
 
   const select: SelectFunctionType =
-    (item: SpotifyThing) => (e: React.MouseEvent) => {
+    (item: SpotifyThing) => (e: React.MouseEvent | React.ChangeEvent) => {
       e.stopPropagation();
       cacheStore(item);
 

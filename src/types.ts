@@ -13,4 +13,4 @@ export type View =
 
 export type SelectFunctionType = (
   item: SpotifyThing
-) => (e: React.MouseEvent) => void;
+) => (e: React.MouseEvent | React.ChangeEvent) => void;
