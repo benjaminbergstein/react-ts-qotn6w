@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useLocalStorageItem } from './storage';
 import {
   currentlyPlaying,
+  filters,
   listPlaylists,
   MyPlaylistsResponse,
   recommend,
@@ -24,20 +25,16 @@ import {
 import useSWR from 'swr';
 
 export const useSliders = () =>
-  useLocalStorageItem<RecommendFilters>('sliders', {
-    minDanceability: 0,
-    maxDanceability: 1,
-    minEnergy: 0,
-    maxEnergy: 1,
-    minPopularity: 0,
-    maxPopularity: 1,
-    minLoudness: 0,
-    maxLoudness: 1,
-    minValence: 0,
-    maxValence: 1,
-    minTempo: 0,
-    maxTempo: 1,
-  });
+  useLocalStorageItem<RecommendFilters>(
+    'sliders',
+    filters.reduce(
+      (acc, filter) => ({
+        ...acc,
+        [filter]: /min/.test(filter) ? 0 : 100,
+      }),
+      {} as RecommendFilters
+    )
+  );
 
 export const useView = () => useLocalStorageItem('view', 'search' as View);
 export const useQ = () => useLocalStorageItem<string>('q', '');

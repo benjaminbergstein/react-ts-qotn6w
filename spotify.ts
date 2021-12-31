@@ -47,7 +47,7 @@ export type SearchResponse = {
 };
 
 export const cacheStore = (item) => {
-  storeStorageItem(`spotifyCache:${uri}`, item);
+  storeStorageItem(`spotifyCache:${item.uri}`, item);
 };
 
 export const cacheGet = (uri) => fetchStorageItem(`spotifyCache:${uri}`);
@@ -81,17 +81,22 @@ export const filters = [
   'maxEnergy',
   'minPopularity',
   'maxPopularity',
-  'minLoudness',
-  'maxLoudness',
-  'minValence',
-  'maxValence',
-  'minTempo',
-  'maxTempo',
+  // 'minLoudness',
+  // 'maxLoudness',
+  // 'minValence',
+  // 'maxValence',
+  // 'minTempo',
+  // 'maxTempo',
 ] as const;
 
 export type RecommendFilter = typeof filters[number];
 
 export type RecommendFilters = Record<RecommendFilter, number>;
+
+export const filterScales: Partial<Record<RecommendFilter, number>> = {
+  minPopularity: 100,
+  maxPopularity: 100,
+};
 
 export const recommend = async (
   seeds: string[],
@@ -102,7 +107,7 @@ export const recommend = async (
       ...Object.entries(recommendFilters).reduce(
         (acc, [k, v]) => ({
           ...acc,
-          [snakeCase(k)]: v,
+          [snakeCase(k)]: (v / 100) * (filterScales[k] || 1),
         }),
         {}
       ),

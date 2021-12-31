@@ -71,8 +71,8 @@ const App: React.FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const selectRef = React.useRef<HTMLSelectElement>(null);
 
-  const [_view, setView] = useView();
-  const view = 'search';
+  const [view, setView] = useView();
+
   const [q, setQ] = useQ();
   const results = useSearch();
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RecommendFilter, RecommendFilters } from './spotify';
+import { RecommendFilter, filterScales } from './spotify';
 
 import { useSliders } from './hooks';
 
@@ -19,16 +19,17 @@ const FilterSlider: React.FC<{
 }> = ({ filter }) => {
   const [sliders, setSliders] = useSliders();
 
+  const scale = filterScales[filter] || 1;
   return (
     <Box>
       <Heading size="s">
-        {sentenceCase(filter)} - {sliders[filter] * 100}%
+        {sentenceCase(filter)} - {(sliders[filter] / 100) * scale}%
       </Heading>
       <Slider
         aria-label={`Slider for ${filter}`}
-        defaultValue={sliders[filter] * 100}
+        defaultValue={sliders[filter]}
         onChange={(val) =>
-          setSliders((sliders) => ({ ...sliders, [filter]: val / 100 }))
+          setSliders((sliders) => ({ ...sliders, [filter]: val }))
         }
       >
         <SliderTrack>
