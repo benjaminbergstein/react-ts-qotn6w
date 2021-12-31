@@ -1,8 +1,12 @@
 import unfetch from 'unfetch';
 import { snakeCase } from 'snake-case';
+import {
+  fetch as fetchStorageItem,
+  store as storeStorageItem,
+} from './storage';
 
-const getUrl = (path, query = undefined) => {
-  const url = new URL(`https://api.spotify.com${path}`);
+const getUrl = (host, path, query = undefined) => {
+  const url = new URL(`https://${host}${path}`);
   url.search = new URLSearchParams(query).toString();
   return url.toString();
 };
@@ -11,12 +15,12 @@ const fetch = async (
   path,
   { method = 'GET', query = undefined, body = undefined } = {}
 ) =>
-  unfetch(getUrl(path, query), {
+  unfetch(getUrl('api.spotify.com', path, query), {
     method,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${ApiToken}`,
+      Authorization: `Bearer ${fetchStorageItem('token')}`,
     },
     ...(body && { body: JSON.stringify(body) }),
   }).then((res) => res.json());
@@ -42,13 +46,11 @@ export type SearchResponse = {
   };
 };
 
-const cache = {};
-
 export const cacheStore = (item) => {
-  cache[item.uri] = item;
+  storeStorageItem(`spotifyCache:${uri}`, item);
 };
 
-export const cacheGet = (uri) => cache[uri];
+export const cacheGet = (uri) => fetchStorageItem(`spotifyCache:${uri}`);
 
 export const search = async (q, type = 'track'): Promise<SearchResponse> =>
   fetch('/v1/search', {
@@ -72,18 +74,22 @@ export const queueAdd = async (uri: string) =>
 export const currentlyPlaying = async () =>
   fetch('/v1/me/player/currently-playing');
 
-const filters = [
-  'danceability',
-  'energy',
-  'popularity',
-  'loudness',
-  'valence',
-  'tempo',
+export const filters = [
+  'minDanceability',
+  'maxDanceability',
+  'minEnergy',
+  'maxEnergy',
+  'minPopularity',
+  'maxPopularity',
+  'minLoudness',
+  'maxLoudness',
+  'minValence',
+  'maxValence',
+  'minTempo',
+  'maxTempo',
 ] as const;
 
-type Filter = Capitalize<typeof filters[number]>;
-type MinMax = 'min' | 'max';
-export type RecommendFilter = `${MinMax}${Filter}`;
+export type RecommendFilter = typeof filters[number];
 
 export type RecommendFilters = Record<RecommendFilter, number>;
 
@@ -130,3 +136,20 @@ export const playlistAdd = async (playlistId: string, uris: string[]) =>
     method: 'POST',
     body: { uris },
   });
+
+export const getAuthUrl = () => {
+  return getUrl('accounts.spotify.com', '/authorize', {
+    client_id: 'ab13746019ba4117bbb11e4bf1f606f0',
+    response_type: 'token',
+    redirect_uri: `https://${document.location.host}/`,
+    scope:
+      'user-modify-playback-state,playlist-modify-private,playlist-modify-public,user-read-currently-playing',
+  });
+};
+
+export const getTokenFromUrl = () => {
+  const url = new URL(
+    `http://www.example.com?${document.location.hash.substr(1)}`
+  );
+  return url.searchParams.get('access_token');
+};

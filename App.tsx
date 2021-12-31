@@ -16,44 +16,24 @@ import {
   SliderThumb,
   Divider,
   Select,
-  RecommendFilter,
-  RecommendFilters,
 } from '@chakra-ui/react';
 
+import { cacheGet, Track, Artist, filters, getAuthUrl } from './spotify';
+
 import {
-  cacheStore,
-  cacheGet,
-  search,
-  recommend,
-  queueAdd,
-  listPlaylists,
-  currentlyPlaying,
-  SearchResponse,
-  RecommendationsResponse,
-  Track,
-  Artist,
-  Playlist,
-  playlistAdd,
-  RecommendFilters,
-  RecommendFilters,
-  MyPlaylistsResponse,
-} from './spotify';
-
-import { pascalCase, sentenceCase } from 'change-case';
-
-import useSWR from 'swr';
-
-type Seeds = Set<string>;
-
-type View = 'search' | 'tune';
-
-const enqueued = new Set();
-
-const enqueue = (uri: string) => {
-  if (enqueued.has(uri)) return;
-  queueAdd(uri);
-  enqueued.add(uri);
-};
+  useView,
+  useQ,
+  useSliders,
+  usePlaylist,
+  useSeeds,
+  useCaptureToken,
+  useMyPlaylists,
+  useSearch,
+  useCurrentTrack,
+  useRecommendations,
+} from './hooks';
+import { Seeds } from './types';
+import FilterSlider from './FilterSlider';
 
 type ItemProps = {
   select: (item: Track | Artist) => void;
@@ -87,75 +67,33 @@ const Item: React.FC<ItemProps> = ({ select, seeds, item }) => (
   </Flex>
 );
 
-const FilterSlider: React.FC<{
-  filter: RecommendFilter;
-  sliders: RecommendFilters;
-  setSliders: React.SetStateAction<RecommendFilters>;
-}> = ({ filter, sliders, setSliders }) => (
-  <Box>
-    <Heading size="s">
-      {sentenceCase(filter)} - {sliders[filter] * 100}%
-    </Heading>
-    <Slider
-      aria-label="slider-ex-1"
-      defaultValue={sliders[filter] * 100}
-      onChange={(val) =>
-        setSliders((sliders) => ({ ...sliders, [filter]: val / 100 }))
-      }
-    >
-      <SliderTrack>
-        <SliderFilledTrack />
-      </SliderTrack>
-      <SliderThumb />
-    </Slider>
-  </Box>
-);
-
 const App: React.FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const selectRef = React.useRef<HTMLSelectElement>(null);
-  const [view, setView] = React.useState<View>('search' as View);
-  const [_, tick] = React.useState<number>(+new Date());
-  const render = () => tick(+new Date());
-  const [q, setQ] = React.useState<string>(null);
-  const [seeds] = React.useState<Seeds>(new Set());
-  const [playlist, setPlaylist] = React.useState<Playlist>(undefined);
-  const { data: results } = useSWR<SearchResponse>(q, async () => search(q));
 
-  const { data: playlistsData } = useSWR<MyPlaylistsResponse>(
-    'playlists',
-    async () => listPlaylists()
-  );
+  const [_view, setView] = useView();
+  const view = 'search';
+  const [q, setQ] = useQ();
+  const results = useSearch();
 
-  const playlists = playlistsData?.items;
+  const [seeds, select, enqueued, enqueue] = useSeeds();
+
+  const [_playlist, setPlaylist] = usePlaylist();
+
+  const playlists = useMyPlaylists();
+
+  const [sliders, setSliders] = useSliders();
+
+  useCaptureToken();
+
+  const currentTrack = useCurrentTrack();
+
+  const recommendations = useRecommendations();
+
   const handleSelect = () => {
     const val = selectRef?.current?.value;
     setPlaylist(val ? JSON.parse(val) : undefined);
   };
-  const { data } = useSWR<{ item: Track }>('current-track', async () =>
-    currentlyPlaying()
-  );
-
-  const currentTrack = data?.item;
-  if (currentTrack) {
-    enqueued.add(currentTrack.uri);
-  }
-  const [sliders, setSliders] = React.useState<RecommendFilters>({
-    minDanceability: 0,
-    maxDanceability: 1,
-    minEnergy: 0,
-    maxEnergy: 1,
-  });
-
-  const { data: recommendations } = useSWR<RecommendationsResponse>(
-    seeds.size > 0
-      ? [...Array.from(seeds), ...Object.values(sliders)].join(',')
-      : null,
-    async () => {
-      const seedsArr = Array.from(seeds).slice(-5);
-      return recommend(seedsArr, sliders);
-    }
-  );
 
   const performSearch = async () => {
     const newQ = inputRef.current.value;
@@ -168,31 +106,15 @@ const App: React.FC = () => {
     performSearch();
   };
 
-  const select = (item) => (e: React.MouseEvent) => {
-    e.stopPropagation();
-    cacheStore(item);
-
-    const isDesired = !seeds.has(item.uri);
-    isDesired ? seeds.add(item.uri) : seeds.delete(item.uri);
-    if (isDesired && item.type === 'track') {
-      if (playlist) {
-        playlistAdd(playlist.id, [item.uri]);
-      } else {
-        enqueue(item.uri);
-      }
-    }
-    render();
-    if (seeds.size === 5) {
-      setView('tune');
-    }
-  };
-
   React.useEffect(() => {
     performSearch();
   }, []);
 
   return (
     <React.Fragment>
+      <a href={getAuthUrl()}>
+        <Button>Authorize</Button>
+      </a>
       {playlists && (
         <Select
           ref={selectRef}
@@ -268,21 +190,27 @@ const App: React.FC = () => {
         </VStack>
       )}
       {view === 'tune' && (
-        <Box>
-          {Array.from(seeds)
-            .map((uri) => cacheGet(uri))
-            .map((item) => (
-              <Item {...{ select, seeds, item }} />
+        <React.Fragment>
+          <Box>
+            <Button onClick={() => setView('search')}>
+              &larr; Back to search
+            </Button>
+          </Box>
+          <Box>
+            {Array.from(seeds)
+              .map((uri) => cacheGet(uri))
+              .map((item) => (
+                <Item {...{ select, seeds, item }} />
+              ))}
+            {filters.map((filter) => (
+              <FilterSlider filter={filter} {...{ sliders, setSliders }} />
             ))}
-          <FilterSlider filter="minDanceability" {...{ sliders, setSliders }} />
-          <FilterSlider filter="maxDanceability" {...{ sliders, setSliders }} />
-          <FilterSlider filter="minEnergy" {...{ sliders, setSliders }} />
-          <FilterSlider filter="maxEnergy" {...{ sliders, setSliders }} />
-          {recommendations?.tracks &&
-            recommendations?.tracks.map((item) => (
-              <Item {...{ select, seeds, item }} />
-            ))}
-        </Box>
+            {recommendations?.tracks &&
+              recommendations?.tracks.map((item) => (
+                <Item {...{ select, seeds, item }} />
+              ))}
+          </Box>
+        </React.Fragment>
       )}
     </React.Fragment>
   );
