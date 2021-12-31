@@ -40,7 +40,7 @@ export const useSliders = () =>
 export const useSetting = (setting, defaultValue = undefined) =>
   useLocalStorageItem(`setting:${setting}`, defaultValue);
 
-export const useView = () => useLocalStorageItem('view', 'search' as View);
+export const useView = () => useLocalStorageItem('view', 'authorize' as View);
 export const useQ = () => useLocalStorageItem<string>('q', '');
 
 export const useSearch = () => {
