@@ -101,7 +101,8 @@ export const useSeeds = (): [
         }
       }
       setSeedsArr(Array.from(seeds));
-      if (seeds.size === 5) {
+      if (seeds.size > 0 && view === 'start') {
+        alert('vu');
         setView('tune');
       }
     };
@@ -118,7 +119,7 @@ export const useCaptureToken = () => {
   React.useEffect(() => {
     if (/#access_token/.test(document.location.hash)) {
       setToken(getTokenFromUrl());
-      setView('search');
+      setView('start');
       document.location = '' as unknown as Location;
     }
   }, []);

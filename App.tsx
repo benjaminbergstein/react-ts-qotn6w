@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { FC } from 'react';
 import {
   InputGroup,
   InputLeftElement,
+  InputRightElement,
   Input,
   Flex,
   Box,
@@ -9,6 +10,7 @@ import {
   Text,
   Button,
   VStack,
+  HStack,
   Checkbox,
   Slider,
   SliderTrack,
@@ -16,7 +18,13 @@ import {
   SliderThumb,
   Divider,
   Select,
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
 } from '@chakra-ui/react';
+
+import { ChevronUpIcon, ChevronRightIcon } from '@chakra-ui/icons';
 
 import { cacheGet, Track, Artist, filters, getAuthUrl } from './spotify';
 
@@ -36,49 +44,97 @@ import {
 import { Seeds } from './types';
 import FilterSlider from './FilterSlider';
 import NavBar from './NavBar';
+import LogOut from './LogOut';
 
 type ItemProps = {
-  select: (item: Track | Artist) => void;
-  seeds: Seeds;
   item: Track | Artist;
 };
 
-const Item: React.FC<ItemProps> = ({ select, seeds, item }) => (
-  <Flex width="100%" direction="row" m={2}>
-    <Button onClick={select(item)} width="100%">
-      <Checkbox
-        mr={2}
-        onChange={select(item)}
-        isChecked={seeds.has(item.uri)}
-      />
-      <Box flex={1}>
-        <Box>
-          <Text fontSize={18} color="gray.900">
-            {item.name}
-          </Text>
-        </Box>
+const SearchField: FC = () => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const [q, setQ] = useQ();
+  const [view, setView] = useView();
+
+  const performSearch = async () => {
+    const newQ = inputRef.current.value;
+    document.location.hash = newQ;
+    setView('search');
+    setQ(newQ);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    performSearch();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <InputGroup>
+        <InputLeftElement
+          pointerEvents="none"
+          children="
+    🔎"
+        />
+        <Input
+          defaultValue={decodeURIComponent(
+            document.location.hash.replace(/\#/, '')
+          )}
+          ref={inputRef}
+          type="search"
+          placeholder="Search"
+        />
+
+        <InputRightElement width="4.5rem">
+          <Button h="1.75rem" size="sm" type="submit">
+            🔎
+          </Button>
+        </InputRightElement>
+      </InputGroup>
+    </form>
+  );
+};
+
+const Item: React.FC<ItemProps> = ({ item }) => {
+  const [seeds, select] = useSeeds();
+  const [view] = useView();
+
+  const isSeed = seeds.has(item.uri);
+  return (
+    <Flex minWidth="80vw" flex="1" direction="row" m={2}>
+      <Button onClick={select(item)} width="100%">
+        {isSeed && (
+          <Checkbox mr={2} onChange={select(item)} isChecked={isSeed} />
+        )}
+        {!isSeed && view === 'tune' && <ChevronUpIcon />}
         <Box flex={1}>
-          <Text fontSize={14} color="gray.600">
-            {item.type === 'artist'
-              ? ' (artist)'
-              : ` ${(item as Track).artists[0].name}`}
-          </Text>
+          <Box>
+            <Text fontSize={18} color="gray.900">
+              {item.name}
+            </Text>
+          </Box>
+          <Box flex={1}>
+            <Text fontSize={14} color="gray.600">
+              {item.type === 'artist'
+                ? ' (artist)'
+                : ` ${(item as Track).artists[0].name}`}
+            </Text>
+          </Box>
         </Box>
-      </Box>
-    </Button>
-  </Flex>
-);
+
+        {!isSeed && view !== 'tune' && <ChevronRightIcon />}
+      </Button>
+    </Flex>
+  );
+};
 
 const App: React.FC = () => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const selectRef = React.useRef<HTMLSelectElement>(null);
 
   const [view, setView] = useView();
 
-  const [q, setQ] = useQ();
   const results = useSearch();
 
-  const [seeds, select, enqueued, enqueue] = useSeeds();
+  const [seeds, select] = useSeeds();
 
   const [_playlist, setPlaylist] = usePlaylist();
 
@@ -98,23 +154,8 @@ const App: React.FC = () => {
     setPlaylist(val ? JSON.parse(val) : undefined);
   };
 
-  const performSearch = async () => {
-    const newQ = inputRef.current.value;
-    document.location.hash = newQ;
-    setQ(newQ);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    performSearch();
-  };
-
-  React.useEffect(() => {
-    performSearch();
-  }, []);
-
   return (
-    <>
+    <Box p="10px">
       <NavBar />
       {view === 'settings' && (
         <VStack>
@@ -159,86 +200,86 @@ const App: React.FC = () => {
           </a>
         </VStack>
       )}
+      {view === 'start' && (
+        <>
+          <Alert status="success">
+            <AlertIcon />
+            <AlertDescription>
+              Let's get started! First, we need a song or artist to seed...
+            </AlertDescription>
+          </Alert>
+          <Divider m={2} />
+          {currentTrack && (
+            <>
+              <Box>
+                <Text>You have something currently playing:</Text>
+              </Box>
+              <Item item={currentTrack} />
+
+              <Box align="center">
+                <Text>
+                  ☝️ &nbsp;&nbsp;Click it to use it as your first
+                  seed.&nbsp;&nbsp;👆
+                </Text>
+              </Box>
+
+              <HStack my="30px">
+                <Box flex="1">
+                  <Divider />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    color="gray.600"
+                    textTransform="uppercase"
+                  >
+                    or
+                  </Text>
+                </Box>
+
+                <Box flex="1">
+                  <Divider />
+                </Box>
+              </HStack>
+            </>
+          )}
+
+          <SearchField />
+        </>
+      )}
       {view === 'search' && (
         <>
-          <Heading p={2} textAlign="left" size="m">
-            Search
-          </Heading>
-
-          <VStack spacing="10px">
-            {seeds.size > 0 && (
-              <>
-                <Divider />
-                <Button onClick={() => setView('tune')} type="button">
-                  Start tuning ➡
-                </Button>
-              </>
-            )}
-            <Divider />
-            {currentTrack && (
-              <>
-                <Box>
-                  <Text>Currently playing</Text>
-                </Box>
-
-                <Box width="100%">
-                  <Item {...{ select, seeds, item: currentTrack }} />
-                </Box>
-              </>
-            )}
-            <Divider />
-            <Box>
-              <Text>Or, search</Text>
-            </Box>
-            <form onSubmit={handleSubmit}>
-              <InputGroup>
-                <InputLeftElement pointerEvents="none" />
-                <Input
-                  defaultValue={decodeURIComponent(
-                    document.location.hash.replace(/\#/, '')
-                  )}
-                  ref={inputRef}
-                  type="search"
-                  placeholder="Search"
-                />
-                <Button type="submit">🔎</Button>
-              </InputGroup>
-            </form>
+          <VStack>
+            <SearchField />
 
             {results?.tracks?.items &&
               results?.tracks?.items.map((track) => (
                 <>
-                  <Item {...{ select, seeds, item: track }} />
-                  <Item {...{ select, seeds, item: track.artists[0] }} />
+                  <Item item={track} />
+                  <Item item={track.artists[0]} />
                 </>
               ))}
           </VStack>
         </>
       )}
       {view === 'tune' && (
-        <>
-          <Box>
-            <Button onClick={() => setView('search')}>
-              &larr; Back to search
-            </Button>
-          </Box>
-          <Box>
-            {Array.from(seeds)
-              .map((uri) => cacheGet(uri))
-              .map((item) => (
-                <Item {...{ select, seeds, item }} />
-              ))}
-            {filters.map((filter) => (
-              <FilterSlider filter={filter} {...{ sliders, setSliders }} />
+        <VStack>
+          {Array.from(seeds)
+            .map((uri) => cacheGet(uri))
+            .map((item) => (
+              <Item {...{ select, seeds, item }} />
             ))}
-            {recommendations?.tracks &&
-              recommendations?.tracks.map((item) => (
-                <Item {...{ select, seeds, item }} />
-              ))}
-          </Box>
-        </>
+          {filters.map((filter) => (
+            <FilterSlider filter={filter} {...{ sliders, setSliders }} />
+          ))}
+          {recommendations?.tracks &&
+            recommendations?.tracks.map((item) => (
+              <Item {...{ select, seeds, item }} />
+            ))}
+        </VStack>
       )}
-    </>
+      {view === 'logout' && <LogOut />}
+    </Box>
   );
 };
 

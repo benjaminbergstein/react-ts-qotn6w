@@ -2,7 +2,8 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "jsx": "react",
-    "jsxFactory": "React.createElement",
+    "noEmit": true,
+    "target": "es2015",
     "jsxFragmentFactory": "React.Fragment"
   }
 }

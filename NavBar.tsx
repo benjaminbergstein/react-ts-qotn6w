@@ -53,6 +53,8 @@ const NavBar: FC = () => {
           <Item view="tune">Tune</Item>
           <Divider />
           <Item view="settings">Settings</Item>
+          <Divider />
+          <Item view="logout">Log out</Item>
         </VStack>
       )}
     </React.Fragment>
