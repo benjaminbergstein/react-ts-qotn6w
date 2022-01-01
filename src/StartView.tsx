@@ -1,51 +1,61 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import {
   Box,
   Text,
+  Flex,
   Divider,
   Alert,
   AlertIcon,
   AlertTitle,
   AlertDescription,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { useCurrentTrack } from './hooks';
+import { useCurrentTrack } from "./hooks";
 
-import SearchField from './SearchField';
-import DividerWithWord from './DividerWithWord'
-import Item from './Item'
+import SearchField from "./SearchField";
+import DividerWithWord from "./DividerWithWord";
+import Item from "./Item";
+import Tooltip, { TooltipParagraph } from "./Tooltip";
 
 const StartView: React.FC = () => {
   const currentTrack = useCurrentTrack();
 
-  return <>
-    <Alert status="success">
-      <AlertIcon />
-      <AlertDescription>
-        Let's get started! First, we need a song or artist to seed...
-      </AlertDescription>
-    </Alert>
-    <Divider m={2} />
-    {currentTrack && (
-      <>
-        <Box>
-          <Text>You have something currently playing:</Text>
-        </Box>
-        <Item item={currentTrack} />
+  return (
+    <>
+      <Tooltip id="start:intro" label={`First "Seed"`}>
+        <TooltipParagraph>
+          We need a track or artist on which to base recommendations.
+        </TooltipParagraph>
+        {currentTrack && (
+          <TooltipParagraph>
+            You have something currently playing. Why not start with that?
+          </TooltipParagraph>
+        )}
+      </Tooltip>
+      {currentTrack && (
+        <>
+          <Box>
+            <Item item={currentTrack} />
+          </Box>
 
-        <Box align="center">
-          <Text>
-            ☝️ &nbsp;&nbsp;Click it to use it as your first
-            seed.&nbsp;&nbsp;👆
-          </Text>
-        </Box>
+          <Flex justify="center" py={2}>
+            <Box>☝️</Box>
+            <Text px={4}>Now playing: click to use as first seed</Text>
+            <Box>👆</Box>
+          </Flex>
 
-        <DividerWithWord>Or</DividerWithWord>
-      </>
-    )}
+          <DividerWithWord>Or</DividerWithWord>
+        </>
+      )}
 
-    <SearchField />
-  </>
+      <SearchField />
+      <Tooltip id="start:search" label="Search for a seed">
+        <TooltipParagraph>
+          You can also search for a track below.
+        </TooltipParagraph>
+      </Tooltip>
+    </>
+  );
 };
 
 export default StartView;

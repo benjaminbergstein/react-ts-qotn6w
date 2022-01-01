@@ -1,12 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
-import { Divider, Button, Text, HStack, Box, VStack } from '@chakra-ui/react';
-import { useSetting, useView } from './hooks';
-import { View } from './types';
+import { Divider, Button, Text, HStack, Box, VStack } from "@chakra-ui/react";
+import { useSetting, useView } from "./hooks";
+import { View } from "./types";
+import Card from "./Card";
 
 const Item: FC<{ view: View }> = ({ view, children }) => {
   const [_view, setView] = useView();
-  const [navOpen, setNavOpen] = useSetting('nav:open');
+  const [navOpen, setNavOpen] = useSetting("nav:open");
 
   return (
     <Box width="100%">
@@ -25,14 +26,17 @@ const Item: FC<{ view: View }> = ({ view, children }) => {
 };
 
 const NavBar: FC = () => {
-  const [navOpen, setNavOpen] = useSetting('nav:open');
+  const [navOpen, setNavOpen] = useSetting("nav:open");
 
   return (
     <React.Fragment>
       <HStack spacing="20px" justify="space-between" m="10px">
         <Box>🎶</Box>
         <Box>
-          <Text fontWeight={700} style={{ fontStyle: 'italic', fontVariant: "small-caps" }}>
+          <Text
+            fontWeight={700}
+            style={{ fontStyle: "italic", fontVariant: "small-caps" }}
+          >
             SpotifyTuner&trade;
           </Text>
         </Box>
@@ -43,13 +47,9 @@ const NavBar: FC = () => {
         </Box>
       </HStack>
       {navOpen && (
-        <VStack
-          spacing="10px"
-          borderWidth="1px"
-          m="10px"
-          p="10px"
-          borderRadius="10px"
-        >
+        <Card>
+          <Item view="start">Start</Item>
+          <Divider />
           <Item view="search">Search</Item>
           <Divider />
           <Item view="tune">Tune</Item>
@@ -57,7 +57,7 @@ const NavBar: FC = () => {
           <Item view="settings">Settings</Item>
           <Divider />
           <Item view="logout">Log out</Item>
-        </VStack>
+        </Card>
       )}
     </React.Fragment>
   );

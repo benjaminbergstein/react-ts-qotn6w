@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { SpotifyThing } from './spotify';
+import * as React from "react";
+import { SpotifyThing } from "./spotify";
 
 export type Seeds = Set<string>;
 
 export type View =
-  | 'authorize'
-  | 'start'
-  | 'search'
-  | 'tune'
-  | 'settings'
-  | 'logout';
+  | "authorize"
+  | "start"
+  | "search"
+  | "tune"
+  | "settings"
+  | "logout";
 
 export type SelectFunctionType = (
   item: SpotifyThing
-) => (e: React.MouseEvent | React.ChangeEvent) => void;
+) => (e?: React.MouseEvent | React.ChangeEvent) => void;

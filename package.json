@@ -28,9 +28,9 @@
     "typescript": "^4.5.4",
     "unfetch": "^4.2.0"
   },
-   "engines": {
-     "node" : ">=14.0.0"
-   },
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -38,6 +38,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "prettier": "2.5.1",
     "react-scripts": "latest"
   }
 }

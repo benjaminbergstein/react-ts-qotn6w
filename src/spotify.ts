@@ -1,9 +1,9 @@
-import unfetch from 'unfetch';
-import { snakeCase } from 'snake-case';
+import unfetch from "unfetch";
+import { snakeCase } from "snake-case";
 import {
   fetch as fetchStorageItem,
   store as storeStorageItem,
-} from './storage';
+} from "./storage";
 
 const getUrl = (host, path, query = undefined) => {
   const url = new URL(`https://${host}${path}`);
@@ -13,14 +13,14 @@ const getUrl = (host, path, query = undefined) => {
 
 const fetch = async (
   path,
-  { method = 'GET', query = undefined, body = undefined } = {}
+  { method = "GET", query = undefined, body = undefined } = {}
 ) =>
-  unfetch(getUrl('api.spotify.com', path, query), {
+  unfetch(getUrl("api.spotify.com", path, query), {
     method,
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${fetchStorageItem('token')}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${fetchStorageItem("token")}`,
     },
     ...(body && { body: JSON.stringify(body) }),
   }).then((res) => res.json());
@@ -29,13 +29,21 @@ export type SpotifyThing = {
   uri: string;
   id: string;
   name: string;
-  type: 'artist' | 'track';
+  type: "artist" | "track";
 };
 
 export type Artist = SpotifyThing;
 
+type Image = {
+  url: string;
+};
+
+export type Album = SpotifyThing & {
+  images: [Image, Image, Image];
+};
 export type Track = SpotifyThing & {
   artists: Array<Artist>;
+  album: Album;
 };
 
 export type Playlist = SpotifyThing;
@@ -52,8 +60,8 @@ export const cacheStore = (item) => {
 
 export const cacheGet = (uri) => fetchStorageItem(`spotifyCache:${uri}`);
 
-export const search = async (q, type = 'track'): Promise<SearchResponse> =>
-  fetch('/v1/search', {
+export const search = async (q, type = "track"): Promise<SearchResponse> =>
+  fetch("/v1/search", {
     query: { q, type },
   });
 
@@ -66,27 +74,27 @@ export type MyPlaylistsResponse = {
 };
 
 export const queueAdd = async (uri: string) =>
-  fetch('/v1/me/player/queue', {
-    method: 'POST',
+  fetch("/v1/me/player/queue", {
+    method: "POST",
     query: { uri },
   });
 
 export const currentlyPlaying = async () =>
-  fetch('/v1/me/player/currently-playing');
+  fetch("/v1/me/player/currently-playing");
 
 export const filters = [
-  'minDanceability',
-  'maxDanceability',
-  'minEnergy',
-  'maxEnergy',
-  'minPopularity',
-  'maxPopularity',
+  "minDanceability",
+  "maxDanceability",
+  "minEnergy",
+  "maxEnergy",
+  "minPopularity",
+  "maxPopularity",
   // 'minLoudness',
   // 'maxLoudness',
-  'minValence',
-  'maxValence',
-  'minTempo',
-  'maxTempo',
+  "minValence",
+  "maxValence",
+  "minTempo",
+  "maxTempo",
 ] as const;
 
 export const defaultFilters = filters.reduce(
@@ -94,7 +102,8 @@ export const defaultFilters = filters.reduce(
     ...acc,
     [filter]: /min/.test(filter) ? 0 : 100,
   }),
-  {} as RecommendFilters)
+  {} as RecommendFilters
+);
 
 export type RecommendFilter = typeof filters[number];
 
@@ -111,7 +120,7 @@ export const recommend = async (
   seeds: string[],
   recommendFilters: RecommendFilters
 ): Promise<RecommendationsResponse> =>
-  fetch('/v1/recommendations', {
+  fetch("/v1/recommendations", {
     query: {
       ...Object.entries(recommendFilters).reduce(
         (acc, [k, v]) => ({
@@ -125,16 +134,16 @@ export const recommend = async (
           const item = cacheGet(uri);
 
           const key = `seed_${item.type}s`;
-          const items = acc[key] !== '' ? acc[key].split(',') : [];
+          const items = acc[key] !== "" ? acc[key].split(",") : [];
           items.push(item.id);
           return {
             ...acc,
-            [key]: items.join(','),
+            [key]: items.join(","),
           };
         },
         {
-          seed_artists: '',
-          seed_tracks: '',
+          seed_artists: "",
+          seed_tracks: "",
         }
       ),
     },
@@ -143,31 +152,30 @@ export const recommend = async (
 export const listPlaylists = async (
   limit: number = 50
 ): Promise<MyPlaylistsResponse> =>
-  fetch('/v1/me/playlists', { query: { limit } });
+  fetch("/v1/me/playlists", { query: { limit } });
 
 export const playlistAdd = async (playlistId: string, uris: string[]) =>
   fetch(`/v1/playlists/${playlistId}/tracks`, {
-    method: 'POST',
+    method: "POST",
     body: { uris },
   });
 
 export const getAuthUrl = () => {
-  const url = getUrl('accounts.spotify.com', '/authorize', {
-    client_id: 'ab13746019ba4117bbb11e4bf1f606f0',
-    response_type: 'token',
+  const url = getUrl("accounts.spotify.com", "/authorize", {
+    client_id: "ab13746019ba4117bbb11e4bf1f606f0",
+    response_type: "token",
     redirect_uri: `${document.location.protocol}//${document.location.host}/`,
     scope:
-      'user-modify-playback-state,playlist-modify-private,playlist-modify-public,user-read-currently-playing',
+      "user-modify-playback-state,playlist-modify-private,playlist-modify-public,user-read-currently-playing",
   });
-  console.log(`${document.location.protocol}//${document.location.host}/`)
-  return url
+  return url;
 };
 
 export const getTokenFromUrl = () => {
   const url = new URL(
     `http://www.example.com?${document.location.hash.substr(1)}`
   );
-  return url.searchParams.get('access_token');
+  return url.searchParams.get("access_token");
 };
 
-export const whoami = async () => fetch('/v1/me');
+export const whoami = async () => fetch("/v1/me");

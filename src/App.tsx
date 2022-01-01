@@ -1,24 +1,20 @@
-import React, { FC } from 'react';
-import { Flex } from '@chakra-ui/react';
+import React, { FC } from "react";
+import { Flex } from "@chakra-ui/react";
 
-import {
-  useView,
-  useCaptureToken,
-  useAuthorization,
-} from './hooks';
+import { useView, useCaptureToken, useAuthorization } from "./hooks";
 
-import NavBar from './NavBar';
-import LogOut from './LogOut';
-import SearchField from './SearchField';
-import DividerWithWord from './DividerWithWord'
+import NavBar from "./NavBar";
+import LogOut from "./LogOut";
+import SearchField from "./SearchField";
+import DividerWithWord from "./DividerWithWord";
 
-import SettingsView from './SettingsView'
-import SearchView from './SearchView'
-import StartView from './StartView'
-import AuthorizeView from './AuthorizeView'
-import TuneView from './TuneView'
+import SettingsView from "./SettingsView";
+import SearchView from "./SearchView";
+import StartView from "./StartView";
+import AuthorizeView from "./AuthorizeView";
+import TuneView from "./TuneView";
 
-import { View } from './types'
+import { View } from "./types";
 
 const ViewMap: Record<View, FC> = {
   settings: SettingsView,
@@ -27,7 +23,7 @@ const ViewMap: Record<View, FC> = {
   search: SearchView,
   tune: TuneView,
   logout: LogOut,
-}
+};
 
 const App: FC = () => {
   const [view] = useView();
@@ -35,9 +31,8 @@ const App: FC = () => {
   useAuthorization();
   useCaptureToken();
 
-  const CurrentView = ViewMap[view] || AuthorizeView
+  const CurrentView = ViewMap[view] || AuthorizeView;
 
-  console.log({ view, CurrentView })
   return (
     <Flex direction="column" height="100vh" p="10px">
       <NavBar />

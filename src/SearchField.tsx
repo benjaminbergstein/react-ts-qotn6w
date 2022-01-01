@@ -1,16 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import {
   Button,
   InputGroup,
   InputLeftElement,
   InputRightElement,
   Input,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import {
-  useView,
-  useQ,
-} from './hooks';
+import { useView, useQ } from "./hooks";
 
 const SearchField: FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -19,7 +16,7 @@ const SearchField: FC = () => {
 
   const performSearch = async () => {
     const newQ = inputRef.current.value;
-    setView('search');
+    setView("search");
     setQ(newQ);
   };
 
@@ -53,4 +50,4 @@ const SearchField: FC = () => {
   );
 };
 
-export default SearchField
+export default SearchField;

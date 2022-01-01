@@ -4,7 +4,8 @@
     "moduleResolution": "node",
     "jsx": "react",
     "noEmit": true,
-    "target": "es2015",
-    "jsxFragmentFactory": "React.Fragment"
-  }
+    "target": "es2015"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }
