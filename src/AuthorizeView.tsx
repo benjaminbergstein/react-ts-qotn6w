@@ -6,7 +6,7 @@ import { getAuthUrl } from "./spotify";
 const AuthorizeView: React.FC = () => (
   <Flex flex={1} direction="row" align="center" width="100%" justify="center">
     <VStack spacing="30px" align="right" maxWidth="600px">
-      <Heading size="lg">Meander through new music woohooo</Heading>
+      <Heading size="lg">Meander through new music</Heading>
       <Heading size="md">Add spontaneity to your queue and playlists.</Heading>
       <Text fontSize="sm">
         Zero in on what you're looking for by tweaking dimensions such as energy
