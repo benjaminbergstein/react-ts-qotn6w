@@ -179,3 +179,10 @@ export const getTokenFromUrl = () => {
 };
 
 export const whoami = async () => fetch("/v1/me");
+
+export const isSongLiked = async (id: string) => {
+  const res = await fetch("/v1/me/tracks/contains", {
+    query: { ids: id },
+  });
+  return res[0];
+};

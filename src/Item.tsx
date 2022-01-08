@@ -3,23 +3,27 @@ import { Flex, Box, Text, Button, Checkbox } from "@chakra-ui/react";
 
 import { ChevronUpIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
-import { Track, Artist } from "./spotify";
+import { Track, Artist, isSongLiked } from "./spotify";
 
 import { useView, useSeeds, useRecommendations } from "./hooks";
 
+import useSWR from "swr";
 type ItemProps = {
   item: Track | Artist;
   context?: "default" | "badge";
 };
 
 const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
-  const [seeds, select] = useSeeds();
+  const [_seeds, select] = useSeeds();
   const [view] = useView();
   const { trueSeeds } = useRecommendations();
+  const { data: isLiked } = useSWR(
+    `liked:${item.uri}`,
+    async () => await isSongLiked(item.id)
+  );
 
   const image = (item as Track)?.album?.images[2];
   const isSeed = context === "badge";
-  console.log({ trueSeeds });
   const isUsed = trueSeeds.has(item.uri);
 
   return (
@@ -30,6 +34,7 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
       height={isSeed ? "100%" : "20vw"}
       maxHeight="100px"
       minHeight={isSeed ? "50px" : "80px"}
+      data-item={JSON.stringify(item)}
     >
       <Button
         minWidth={isSeed ? undefined : "70vw"}
@@ -68,7 +73,18 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
             </Box>
           </Box>
         </Box>
-
+        {isLiked && (
+          <Box
+            flexGrow={1}
+            flexShrink={0}
+            minWidth="30px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Text color="pint.500">❤️</Text>
+          </Box>
+        )}
         {!isSeed && view !== "tune" && <ChevronRightIcon />}
       </Button>
     </Flex>
