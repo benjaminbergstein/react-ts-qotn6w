@@ -7,8 +7,9 @@ export const fetch = (k, defaultValue = undefined) => {
     const v = JSON.parse(localStorage.getItem(key(k)));
     if (v !== null) return v;
     if (defaultValue === undefined) return defaultValue;
-  } catch (e) {}
-  return defaultValue
+  } catch (e) {
+    return defaultValue;
+  }
 };
 
 export const store = (k, item) => {
