@@ -12,8 +12,6 @@ const SearchView: React.FC = () => {
   return (
     <>
       <VStack>
-        <SearchField />
-
         {results?.tracks?.items &&
           results?.tracks?.items.map((track) => (
             <>
@@ -21,6 +19,7 @@ const SearchView: React.FC = () => {
               <Item item={track.artists[0]} />
             </>
           ))}
+        <SearchField />
       </VStack>
     </>
   );

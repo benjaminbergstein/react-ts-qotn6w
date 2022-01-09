@@ -8,7 +8,7 @@ export const fetch = (k, defaultValue = undefined) => {
     if (v !== null) return v;
     if (defaultValue === undefined) return defaultValue;
   } catch (e) {
-    return defaultValue;
+    return store(k, defaultValue);
   }
 };
 
@@ -46,5 +46,9 @@ export function useLocalStorageItem<T>(k: string, defaultValue: T) {
     swrReturn.mutate();
   };
 
-  return [swrReturn.data, set, clear] as [T, typeof set, typeof clear];
+  return [swrReturn.data || defaultValue, set, clear] as [
+    T,
+    typeof set,
+    typeof clear
+  ];
 }

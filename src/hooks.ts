@@ -113,7 +113,7 @@ export const useCaptureToken = () => {
   const [view, setView] = useView();
   React.useEffect(() => {
     if (/#access_token/.test(document.location.hash)) {
-      setView("start");
+      setView("tune");
       setToken(getTokenFromUrl());
       document.location.hash = "";
     }
@@ -168,4 +168,28 @@ export const useAuthorization = () => {
       setView("authorize");
     }
   }, [isAuthorized]);
+};
+
+export const useBerzerkMode = () => {
+  const [_, select] = useSeeds();
+  const { recommendations, isValidating } = useRecommendations();
+  const [berzerkMode] = useSetting("berzerkMode", false);
+
+  React.useEffect(() => {
+    if (!berzerkMode) return;
+    if (!recommendations?.tracks?.length) return;
+
+    const selection = Math.round(
+      Math.random() * recommendations?.tracks?.length
+    );
+    const track = recommendations.tracks[selection];
+
+    const timeout = setTimeout(() => {
+      select(track)();
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [berzerkMode, isValidating, recommendations?.tracks?.length]);
 };

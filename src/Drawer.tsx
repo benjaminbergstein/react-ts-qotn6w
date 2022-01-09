@@ -2,7 +2,7 @@ import React, { FC, useRef } from "react";
 import {
   Button,
   useDisclosure,
-  Drawer,
+  Drawer as _Drawer,
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
@@ -12,11 +12,17 @@ import {
 } from "@chakra-ui/react";
 
 type Props = {
-  title: string;
+  title?: string | React.ElementType;
+  toggle: string | React.ElementType;
   controls?: React.ComponentType;
 };
 
-const Drawer: FC<Props> = ({ title, children, controls: Controls }) => {
+const Drawer: FC<Props> = ({
+  toggle = undefined,
+  title = undefined,
+  children,
+  controls: Controls = undefined,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -30,9 +36,9 @@ const Drawer: FC<Props> = ({ title, children, controls: Controls }) => {
         colorScheme="teal"
         onClick={onOpen}
       >
-        {title}
+        {toggle}
       </Button>
-      <Drawer
+      <_Drawer
         isOpen={isOpen}
         placement="right"
         onClose={onClose}
@@ -52,7 +58,7 @@ const Drawer: FC<Props> = ({ title, children, controls: Controls }) => {
             </Button>
           </DrawerFooter>
         </DrawerContent>
-      </Drawer>
+      </_Drawer>
     </>
   );
 };

@@ -15,10 +15,7 @@ const SettingsView: React.FC = () => {
   const selectRef = React.useRef<HTMLSelectElement>(null);
   const [_playlist, setPlaylist] = usePlaylist();
   const playlists = useMyPlaylists();
-  const [berzerkModeEnabled, setBerzerkModeEnabled] = useSetting(
-    "berzerModeEnabled",
-    false
-  );
+  const [berzerkMode, setBerzerkMode] = useSetting("berzerkMode", false);
 
   const handleSelect = () => {
     const val = selectRef?.current?.value;
@@ -47,15 +44,16 @@ const SettingsView: React.FC = () => {
       <Divider />
       <FormControl display="flex" alignItems="center">
         <Switch
-          isChecked={berzerkModeEnabled}
-          onChange={() => setBerzerkModeEnabled(!berzerkModeEnabled)}
+          isChecked={berzerkMode}
+          onChange={() => setBerzerkMode(!berzerkMode)}
           id="berzerk-mode"
           colorScheme="red"
         />
         <FormLabel ml={2} mb={0} htmlFor="berzerk-mode">
-          Berzerk mode enabled
+          Berzerk mode
         </FormLabel>
       </FormControl>
+
       <Divider />
     </VStack>
   );

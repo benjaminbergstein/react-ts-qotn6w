@@ -34,8 +34,7 @@ const App: FC = () => {
   const CurrentView = ViewMap[view] || AuthorizeView;
 
   return (
-    <Flex direction="column" height="100vh" p="10px">
-      <NavBar />
+    <Flex direction="column" height="100vh">
       <CurrentView />
     </Flex>
   );

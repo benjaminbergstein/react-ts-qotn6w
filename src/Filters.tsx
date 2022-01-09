@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Button } from "@chakra-ui/react";
-import { RepeatIcon } from "@chakra-ui/icons";
-import { filters } from "./spotify";
+import { HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
+import { defaultFilters, filters } from "./spotify";
 
 import Drawer from "./Drawer";
 import { useSliders } from "./hooks";
@@ -27,7 +27,7 @@ const Filters: FC = () => {
   const [clearSliders] = useSliders();
 
   return (
-    <Drawer title="Filters" controls={Controls}>
+    <Drawer toggle={<HamburgerIcon />} title="Filters" controls={Controls}>
       {filters.map((filter) => (
         <FilterSlider filter={filter} />
       ))}
