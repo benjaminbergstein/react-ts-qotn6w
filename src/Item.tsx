@@ -57,8 +57,8 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
         )}
         <Box flex={1}>
           <Box>
-            <Box maxWidth={isSeed ? "20vw" : "60vw"}>
-              <Text fontSize={16} color="gray.900" isTruncated>
+            <Box maxWidth={isSeed ? "20vw" : "30vw"}>
+              <Text fontSize={16} color="gray.900" whiteSpace="normal" noOfLines={2}>
                 {item.name}
               </Text>
             </Box>

@@ -12,8 +12,8 @@ import {
 } from "@chakra-ui/react";
 
 type Props = {
-  title?: string | React.ElementType;
-  toggle: string | React.ElementType;
+  title?: string | JSX.Element;
+  toggle: string | JSX.Element;
   controls?: React.ComponentType;
 };
 
