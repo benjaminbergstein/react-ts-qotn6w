@@ -28,35 +28,24 @@ const SearchField: FC = () => {
   };
 
   return (
-    <>
-      <Box height="100px"></Box>
-      <Box
-        zIndex={1}
-        p={3}
-        backgroundColor="white"
-        position="fixed"
-        bottom="0"
-        width="100vw"
-        height="100px"
-      >
-        <form onSubmit={handleSubmit}>
-          <InputGroup>
-            <Input
-              defaultValue={q}
-              ref={inputRef}
-              type="search"
-              placeholder="Search"
-            />
+    <Box backgroundColor="white" flex={1}>
+      <form onSubmit={handleSubmit}>
+        <InputGroup>
+          <Input
+            defaultValue={q}
+            ref={inputRef}
+            type="search"
+            placeholder="Search"
+          />
 
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" type="submit">
-                <SearchIcon />
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-        </form>
-      </Box>
-    </>
+          <InputRightElement width="4.5rem">
+            <Button h="1.75rem" size="sm" type="submit">
+              <SearchIcon />
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+      </form>
+    </Box>
   );
 };
 

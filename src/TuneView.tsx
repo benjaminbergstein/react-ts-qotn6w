@@ -37,7 +37,10 @@ const TuneView: FC = () => {
         </VStack>
       )}
       {anySeeds && !isValidating && recommendations?.tracks && (
-        <VStack>
+        <VStack alignItems="start" p={3}>
+          <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>
+            Recommendations
+          </Text>
           {recommendations?.tracks.map((item) => (
             <Item item={item} />
           ))}

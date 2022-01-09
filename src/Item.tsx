@@ -1,7 +1,7 @@
 import React, { FC } from "react";
-import { Flex, Box, Text, Button, Checkbox } from "@chakra-ui/react";
+import { VStack, Flex, Box, Text, Button, Checkbox } from "@chakra-ui/react";
 
-import { ChevronUpIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, ChevronUpIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 import { Track, Artist, isSongLiked } from "./spotify";
 
@@ -10,7 +10,7 @@ import { useView, useSeeds, useRecommendations } from "./hooks";
 import useSWR from "swr";
 type ItemProps = {
   item: Track | Artist;
-  context?: "default" | "badge";
+  context?: "default" | "badge" | "search";
 };
 
 const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
@@ -24,48 +24,57 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
 
   const image = (item as Track)?.album?.images[2];
   const isSeed = context === "badge";
+  const isSearch = context === "search";
   const isUsed = trueSeeds.has(item.uri);
 
   return (
     <Flex
+      position="relative"
       width={isSeed ? undefined : "100%"}
       direction="row"
       opacity={isSeed && !isUsed ? 0.5 : 1}
       height={isSeed ? "100%" : "20vw"}
       maxHeight="100px"
-      minHeight={isSeed ? "50px" : "80px"}
+      minHeight={isSeed ? "80px" : "80px"}
       data-item={JSON.stringify(item)}
     >
+      {isSeed && isLiked && <Box zIndex={1} position="absolute" right="0" top="0">
+        <Box position="relative" left="-3px"><Text fontSize="14px" color="pint.500">❤️</Text></Box>
+      </Box>}
       <Button
-        minWidth={isSeed ? undefined : "70vw"}
+        minWidth={isSeed || isSearch ? undefined : "70vw"}
         size={isSeed ? "xs" : "md"}
         onClick={select(item)}
         width="100%"
         height="100%"
+        px={isSeed ? 1 : 2}
       >
-        {!isSeed && view === "tune" && <ChevronUpIcon />}
+        {!isSeed && view === "tune" && (isSearch ? <ChevronLeftIcon /> : <ChevronUpIcon />)}
 
         {image && (
           <Box
             flexShrink={0}
-            px="10px"
-            py="3px"
             minWidth={isSeed ? "25px" : "32px"}
+            pl={isSeed ? 0 : "10px"}
+            pr="4px"
           >
             <img src={image.url} width={isSeed ? "25px" : "32px"} />
           </Box>
         )}
         <Box flex={1}>
-          <Box>
-            <Box maxWidth={isSeed ? "20vw" : "30vw"}>
-              <Text fontSize={16} color="gray.900" whiteSpace="normal" noOfLines={2}>
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Box maxWidth="50vw">
+              <Text
+                fontSize={isSeed ? 14 : 16}
+                color="gray.900"
+                whiteSpace="normal"
+                noOfLines={2}
+              >
                 {item.name}
               </Text>
             </Box>
-          </Box>
-          <Box flex={1}>
-            <Box maxWidth={isSeed ? "20vw" : "60vw"}>
-              <Text fontSize={12} color="gray.600" isTruncated>
+            <Box maxWidth="30vw">
+              <Text fontSize={isSeed ? 10 : 12} color="gray.600" isTruncated>
                 {item.type === "artist"
                   ? " (artist)"
                   : ` ${(item as Track).artists[0].name}`}
@@ -73,18 +82,16 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
             </Box>
           </Box>
         </Box>
-        {isLiked && (
-          <Box
-            flexGrow={1}
-            flexShrink={0}
-            minWidth="30px"
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Text color="pint.500">❤️</Text>
-          </Box>
-        )}
+        {!isSeed && <Box
+          flexGrow={0}
+          flexShrink={0}
+          minWidth="30px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          {isLiked && <Text color="pint.500">❤️</Text>}
+        </Box>}
         {!isSeed && view !== "tune" && <ChevronRightIcon />}
       </Button>
     </Flex>

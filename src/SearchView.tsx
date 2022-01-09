@@ -1,28 +1,78 @@
-import React, { FC } from "react";
-import { VStack } from "@chakra-ui/react";
+import { useCurrentTrack, useSearch } from "./hooks";
 
-import { useSearch } from "./hooks";
+import React, { FC, useRef } from "react";
+import {
+  Button,
+  useDisclosure,
+  Drawer,
+  DrawerOverlay,
+  DrawerBody,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
+  DrawerFooter,
+  VStack,
+  Box,
+  Text,
+  Flex,
+} from "@chakra-ui/react";
 
 import SearchField from "./SearchField";
+import DividerWithWord from "./DividerWithWord";
 import Item from "./Item";
+import { SearchIcon } from "@chakra-ui/icons";
 
-const SearchView: React.FC = () => {
+const StartView: React.FC = () => {
+  const currentTrack = useCurrentTrack();
+
   const results = useSearch();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <VStack>
-        {results?.tracks?.items &&
-          results?.tracks?.items.map((track) => (
+      <Button
+        flex="1"
+        variant="outline"
+        py={3}
+        ref={btnRef}
+        colorScheme="teal"
+        onClick={onOpen}
+      >
+        <SearchIcon />
+      </Button>
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={onClose}
+        finalFocusRef={btnRef}
+      >
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerHeader>Search</DrawerHeader>
+
+          <DrawerBody>
             <>
-              <Item item={track} />
-              <Item item={track.artists[0]} />
+              <VStack>
+                {results?.tracks?.items &&
+                  results?.tracks?.items.map((track) => (
+                    <>
+                      <Item context="search" item={track} />
+                      <Item context="search" item={track.artists[0]} />
+                    </>
+                  ))}
+              </VStack>
             </>
-          ))}
-        <SearchField />
-      </VStack>
+          </DrawerBody>
+
+          <DrawerFooter>
+            <SearchField />
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
 
-export default SearchView;
+export default StartView;
