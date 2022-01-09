@@ -1,31 +1,28 @@
 import React, { FC } from "react";
 import {
   Box,
+  ButtonGroup,
   Text,
   Stack,
   FormControl,
   FormLabel,
   VStack,
-  HStack,
   Flex,
-  Alert,
-  AlertIcon,
   Button,
   Switch,
-  AlertTitle,
-  AlertDescription,
   Spinner,
 } from "@chakra-ui/react";
 
-import { RepeatIcon, ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
-import { cacheGet, filters } from "./spotify";
+import { RepeatIcon } from "@chakra-ui/icons";
+import { cacheGet } from "./spotify";
 
 import { useSeeds, useRecommendations, useSetting, useSliders } from "./hooks";
 
-import FilterSlider from "./FilterSlider";
+import Filters from "./Filters";
 import Item from "./Item";
-import Card from "./Card";
 import Tooltip, { TooltipParagraph } from "./Tooltip";
+import SettingsView from "./SettingsView";
+import Drawer from "./Drawer";
 
 const TuneView: FC = () => {
   const [seeds, select, __, ___, resetSeeds] = useSeeds();
@@ -115,39 +112,17 @@ const TuneView: FC = () => {
           </FormLabel>
         </FormControl>
       )}
-      <Card>
-        <Button
-          width="100%"
-          size="xs"
-          onClick={() => {
-            setFiltersOpen(!filtersOpen);
-          }}
-          variant="ghost"
-        >
-          <HStack width="100%" justify="space-between">
-            <Text>Filters</Text>
-            {filtersOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          </HStack>
-        </Button>
 
-        {filtersOpen && (
-          <>
-            {filters.map((filter) => (
-              <FilterSlider filter={filter} />
-            ))}
-            <Box>
-              <Button
-                onClick={clearSliders}
-                colorScheme="red"
-                size="xs"
-                leftIcon={<RepeatIcon />}
-              >
-                Clear filters
-              </Button>
-            </Box>
-          </>
-        )}
-      </Card>
+      <Box display="flex">
+        <ButtonGroup display="flex" flex="1" isAttached>
+          <Button flex="1" colorScheme="teal" variant="outline">
+            Search
+          </Button>
+          <Drawer title="Settings">Foo</Drawer>
+          <Filters />
+        </ButtonGroup>
+      </Box>
+
       {isValidating && (
         <VStack
           my="25px"
