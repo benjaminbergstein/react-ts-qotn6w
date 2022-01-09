@@ -8,7 +8,7 @@ import SettingsView from "./SettingsView";
 import SearchView from "./SearchView";
 import Drawer from "./Drawer";
 
-const Navbar: FC = () => {
+const Navbar: FC = () => (
   <ButtonGroup display="flex" flex="1" isAttached>
     <Filters />
     <Drawer toggle={<SearchIcon />} title="Search">

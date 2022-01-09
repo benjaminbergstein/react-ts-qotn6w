@@ -1,35 +1,46 @@
 import React, { FC } from "react";
-import { Box, Text, Flex } from "@chakra-ui/react";
+import { VStack, Box, Text, Flex } from "@chakra-ui/react";
 
 import { useCurrentTrack } from "./hooks";
 
 import SearchField from "./SearchField";
 import DividerWithWord from "./DividerWithWord";
 import Item from "./Item";
+import { SearchIcon } from "@chakra-ui/icons"
 
 const StartView: React.FC = () => {
   const currentTrack = useCurrentTrack();
 
   return (
-    <Box padding={5}>
+    <VStack spacing={0} flex={1} width="100vw">
+      <Flex direction="column" flex={1} align="center" maxWidth="90vw">
+        <Box p={5}><SearchIcon width="40px" height="40px" /></Box>
+        <Box>
+          <Text fontSize="md" textAlign="center">Click the search for your first recommendation seed.</Text>
+        </Box>
+      </Flex>
+
       {currentTrack && (
         <>
-          <Box>
-            <Item item={currentTrack} />
+          <Box flex={1} width="80%" maxWidth="550px">
+            <DividerWithWord>Or</DividerWithWord>
           </Box>
-
-          <Flex justify="center" py={2}>
-            <Box>☝️</Box>
-            <Text px={4}>Now playing: click to use as first seed</Text>
-            <Box>👆</Box>
+          <Flex direction="column" align="center" flex={1}>
+            <Box p={5}>
+              <Text fontSize="40px">
+                ⏯
+              </Text>
+            </Box>
+            <Text fontSize="md" textAlign="center" px={4}>You have a track playing.<br />Click it to use as 1st seed</Text>
           </Flex>
-
-          <DividerWithWord>Or</DividerWithWord>
+          <Flex justify="center" py={2} align="center" minHeight="30vh">
+            <Box>👉</Box>
+            <Item item={currentTrack} />
+            <Box>👈</Box>
+          </Flex>
         </>
       )}
-
-      <SearchField />
-    </Box>
+    </VStack>
   );
 };
 

@@ -1,6 +1,7 @@
 import useSWR from "swr";
 
-const key = (k) => `bb:spotify:mixtape:${k}`;
+const VERSION = '1558635'
+const key = (k) => `bb:${VERSION}:spotify:mixtape:${k}`;
 
 export const fetch = (k, defaultValue = undefined) => {
   try {

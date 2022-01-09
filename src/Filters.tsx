@@ -9,11 +9,11 @@ import { useSliders } from "./hooks";
 import FilterSlider from "./FilterSlider";
 
 const Controls: FC = () => {
-  const [clearSliders] = useSliders();
+  const [_, __, clearSliders] = useSliders();
   return (
     <Button
       mr={3}
-      onClick={clearSliders}
+      onClick={() => { clearSliders() }}
       variant="outline"
       colorScheme="red"
       leftIcon={<RepeatIcon />}
