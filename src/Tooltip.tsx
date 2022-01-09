@@ -1,12 +1,14 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 
-import { Box, Button, Text, VStack } from "@chakra-ui/react";
-import { QuestionIcon } from "@chakra-ui/icons";
-import { useSetting } from "./hooks";
+import {
+  Box, Button, Text, VStack,
+} from '@chakra-ui/react';
+import { QuestionIcon } from '@chakra-ui/icons';
+import { useSetting } from './hooks';
 
-export const TooltipParagraph = ({ children }) => (
-  <Text fontSize="16px">{children}</Text>
-);
+export function TooltipParagraph({ children }) {
+  return <Text fontSize="16px">{children}</Text>;
+}
 
 type TooltipProps = {
   label: string;
@@ -18,8 +20,8 @@ type TooltipProps = {
 const Tooltip: FC<TooltipProps> = ({
   id,
   label,
-  closeMessage = "Got it!",
-  color = "blue",
+  closeMessage = 'Got it!',
+  color = 'blue',
   children,
 }) => {
   const [isOpen, setIsOpen] = useSetting(`tooltip:${id}`, true);
@@ -42,7 +44,9 @@ const Tooltip: FC<TooltipProps> = ({
             fontWeight="normal"
             textTransform="uppercase"
           >
-            Tip: {label}
+            Tip:
+            {' '}
+            {label}
           </Text>
         </Button>
       </Box>
@@ -62,7 +66,8 @@ const Tooltip: FC<TooltipProps> = ({
     >
       <Text textTransform="uppercase" fontSize="16px">
         <QuestionIcon width="15px" height="15px" />
-        &nbsp;&nbsp;{label}
+        &nbsp;&nbsp;
+        {label}
       </Text>
 
       {children}

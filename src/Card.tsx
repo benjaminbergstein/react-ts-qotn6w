@@ -1,5 +1,5 @@
-import React, { FC } from "react";
-import { VStack } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import { VStack } from '@chakra-ui/react';
 
 const Card: FC = ({ children }) => (
   <VStack

@@ -1,4 +1,4 @@
-import React, { FC, useRef } from "react";
+import React, { FC, useRef } from 'react';
 import {
   Button,
   useDisclosure,
@@ -9,7 +9,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 type Props = {
   title?: string | JSX.Element;

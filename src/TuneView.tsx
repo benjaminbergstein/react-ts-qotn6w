@@ -1,12 +1,14 @@
-import React, { FC } from "react";
-import { Box, Text, VStack, Spinner } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import {
+  Box, Text, VStack, Spinner,
+} from '@chakra-ui/react';
 
-import { useBerzerkMode, useSeeds, useRecommendations } from "./hooks";
+import { useBerzerkMode, useSeeds, useRecommendations } from './hooks';
 
-import Navbar from "./Navbar";
-import Seeds from "./Seeds";
-import Item from "./Item";
-import Start from "./Start";
+import Navbar from './Navbar';
+import Seeds from './Seeds';
+import Item from './Item';
+import Start from './Start';
 
 const TuneView: FC = () => {
   const [seeds] = useSeeds();

@@ -1,14 +1,14 @@
-import React from "react";
-import { useView } from "./hooks";
+import React from 'react';
+import { useView } from './hooks';
 
-const LogOut = () => {
+function LogOut() {
   const [_view, setView] = useView();
   React.useEffect(() => {
     localStorage.clear();
-    setView("authorize");
+    setView('authorize');
   }, []);
 
   return <>Logging out...</>;
-};
+}
 
 export default LogOut;

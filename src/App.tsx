@@ -1,13 +1,13 @@
-import React, { FC } from "react";
-import { Flex } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import { Flex } from '@chakra-ui/react';
 
-import { useView, useCaptureToken, useAuthorization } from "./hooks";
+import { useView, useCaptureToken, useAuthorization } from './hooks';
 
-import AuthorizeView from "./AuthorizeView";
-import TuneView from "./TuneView";
-import LogOut from "./LogOut";
+import AuthorizeView from './AuthorizeView';
+import TuneView from './TuneView';
+import LogOut from './LogOut';
 
-import { View } from "./types";
+import { View } from './types';
 
 const ViewMap: Record<View, FC> = {
   authorize: AuthorizeView,

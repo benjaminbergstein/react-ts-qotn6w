@@ -1,12 +1,13 @@
-import React, { FC } from "react";
-import { VStack, Box, Text, Flex } from "@chakra-ui/react";
+import React from 'react';
+import {
+  VStack, Box, Text, Flex,
+} from '@chakra-ui/react';
 
-import { useCurrentTrack } from "./hooks";
+import { SearchIcon } from '@chakra-ui/icons';
+import { useCurrentTrack } from './hooks';
 
-import SearchField from "./SearchField";
-import DividerWithWord from "./DividerWithWord";
-import Item from "./Item";
-import { SearchIcon } from "@chakra-ui/icons";
+import DividerWithWord from './DividerWithWord';
+import Item from './Item';
 
 const StartView: React.FC = () => {
   const currentTrack = useCurrentTrack();

@@ -1,45 +1,47 @@
-import React, { FC } from "react";
-import { VStack, Flex, Box, Text, Button, Checkbox } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import {
+  VStack, Flex, Box, Text, Button, Checkbox,
+} from '@chakra-ui/react';
 
 import {
   ChevronLeftIcon,
   ChevronUpIcon,
   ChevronRightIcon,
-} from "@chakra-ui/icons";
+} from '@chakra-ui/icons';
 
-import { Track, Artist, isSongLiked } from "./spotify";
+import useSWR from 'swr';
+import { Track, Artist, isSongLiked } from './spotify';
 
-import { useView, useSeeds, useRecommendations } from "./hooks";
+import { useView, useSeeds, useRecommendations } from './hooks';
 
-import useSWR from "swr";
 type ItemProps = {
   item: Track | Artist;
-  context?: "default" | "badge" | "search";
+  context?: 'default' | 'badge' | 'search';
 };
 
-const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
+const Item: React.FC<ItemProps> = ({ context = 'default', item }) => {
   const [_seeds, select] = useSeeds();
   const [view] = useView();
   const { trueSeeds } = useRecommendations();
   const { data: isLiked } = useSWR(
     `liked:${item.uri}`,
-    async () => await isSongLiked(item.id)
+    async () => await isSongLiked(item.id),
   );
 
   const image = (item as Track)?.album?.images[2];
-  const isSeed = context === "badge";
-  const isSearch = context === "search";
+  const isSeed = context === 'badge';
+  const isSearch = context === 'search';
   const isUsed = trueSeeds.has(item.uri);
 
   return (
     <Flex
       position="relative"
-      width={isSeed ? undefined : "100%"}
+      width={isSeed ? undefined : '100%'}
       direction="row"
       opacity={isSeed && !isUsed ? 0.5 : 1}
-      height={isSeed ? "100%" : "20vw"}
+      height={isSeed ? '100%' : '20vw'}
       maxHeight="100px"
-      minHeight={isSeed ? "80px" : "80px"}
+      minHeight={isSeed ? '80px' : '80px'}
       data-item={JSON.stringify(item)}
     >
       {isSeed && isLiked && (
@@ -52,25 +54,25 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
         </Box>
       )}
       <Button
-        minWidth={isSeed || isSearch ? undefined : "70vw"}
-        size={isSeed ? "xs" : "md"}
+        minWidth={isSeed || isSearch ? undefined : '70vw'}
+        size={isSeed ? 'xs' : 'md'}
         onClick={select(item)}
         width="100%"
         height="100%"
         px={isSeed ? 1 : 2}
       >
-        {!isSeed &&
-          view === "tune" &&
-          (isSearch ? <ChevronLeftIcon /> : <ChevronUpIcon />)}
+        {!isSeed
+          && view === 'tune'
+          && (isSearch ? <ChevronLeftIcon /> : <ChevronUpIcon />)}
 
         {image && (
           <Box
             flexShrink={0}
-            minWidth={isSeed ? "25px" : "32px"}
-            pl={isSeed ? 0 : "10px"}
+            minWidth={isSeed ? '25px' : '32px'}
+            pl={isSeed ? 0 : '10px'}
             pr="4px"
           >
-            <img src={image.url} width={isSeed ? "25px" : "32px"} />
+            <img src={image.url} width={isSeed ? '25px' : '32px'} />
           </Box>
         )}
         <Box flex={1}>
@@ -87,8 +89,8 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
             </Box>
             <Box maxWidth="30vw">
               <Text fontSize={isSeed ? 10 : 12} color="gray.600" isTruncated>
-                {item.type === "artist"
-                  ? " (artist)"
+                {item.type === 'artist'
+                  ? ' (artist)'
                   : ` ${(item as Track).artists[0].name}`}
               </Text>
             </Box>
@@ -106,7 +108,7 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
             {isLiked && <Text color="pint.500">❤️</Text>}
           </Box>
         )}
-        {!isSeed && view !== "tune" && <ChevronRightIcon />}
+        {!isSeed && view !== 'tune' && <ChevronRightIcon />}
       </Button>
     </Flex>
   );

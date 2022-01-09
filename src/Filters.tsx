@@ -1,12 +1,12 @@
-import React, { FC } from "react";
-import { Button } from "@chakra-ui/react";
-import { HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
-import { defaultFilters, filters } from "./spotify";
+import React, { FC } from 'react';
+import { Button } from '@chakra-ui/react';
+import { HamburgerIcon, RepeatIcon } from '@chakra-ui/icons';
+import { defaultFilters, filters } from './spotify';
 
-import Drawer from "./Drawer";
-import { useSliders } from "./hooks";
+import Drawer from './Drawer';
+import { useSliders } from './hooks';
 
-import FilterSlider from "./FilterSlider";
+import FilterSlider from './FilterSlider';
 
 const Controls: FC = () => {
   const [_, __, clearSliders] = useSliders();

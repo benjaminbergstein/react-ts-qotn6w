@@ -1,5 +1,7 @@
-import React, { FC } from "react";
-import { Box, Text, HStack, Divider } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import {
+  Box, Text, HStack, Divider,
+} from '@chakra-ui/react';
 
 const DividerWithWord: FC = ({ children }) => (
   <HStack my="30px">

@@ -1,12 +1,14 @@
-import React, { FC } from "react";
-import { Divider, Box, Text, Stack, Flex, Button } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import {
+  Divider, Box, Text, Stack, Flex, Button,
+} from '@chakra-ui/react';
 
-import { RepeatIcon } from "@chakra-ui/icons";
-import { cacheGet } from "./spotify";
+import { RepeatIcon } from '@chakra-ui/icons';
+import { cacheGet } from './spotify';
 
-import { useSeeds } from "./hooks";
+import { useSeeds } from './hooks';
 
-import Item from "./Item";
+import Item from './Item';
 
 const Seeds: FC = () => {
   const [seeds, _, __, ___, resetSeeds] = useSeeds();

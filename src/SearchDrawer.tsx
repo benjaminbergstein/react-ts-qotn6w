@@ -1,6 +1,4 @@
-import { useCurrentTrack, useSearch } from "./hooks";
-
-import React, { FC, useRef } from "react";
+import React, { FC, useRef } from 'react';
 import {
   Button,
   useDisclosure,
@@ -15,12 +13,13 @@ import {
   Box,
   Text,
   Flex,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
+import { SearchIcon } from '@chakra-ui/icons';
+import { useCurrentTrack, useSearch } from './hooks';
 
-import SearchField from "./SearchField";
-import DividerWithWord from "./DividerWithWord";
-import Item from "./Item";
-import { SearchIcon } from "@chakra-ui/icons";
+import SearchField from './SearchField';
+import DividerWithWord from './DividerWithWord';
+import Item from './Item';
 
 const StartView: React.FC = () => {
   const currentTrack = useCurrentTrack();
@@ -55,8 +54,8 @@ const StartView: React.FC = () => {
           <DrawerBody>
             <>
               <VStack>
-                {results?.tracks?.items &&
-                  results?.tracks?.items.map((track) => (
+                {results?.tracks?.items
+                  && results?.tracks?.items.map((track) => (
                     <>
                       <Item context="search" item={track} />
                       <Item context="search" item={track.artists[0]} />

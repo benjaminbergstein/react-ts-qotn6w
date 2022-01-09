@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from 'react';
 import {
   Box,
   Button,
@@ -9,17 +9,19 @@ import {
   Text,
   Divider,
   Select,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
-import { WarningIcon } from "@chakra-ui/icons";
-import { useView, useSetting, usePlaylist, useMyPlaylists } from "./hooks";
+import { WarningIcon } from '@chakra-ui/icons';
+import {
+  useView, useSetting, usePlaylist, useMyPlaylists,
+} from './hooks';
 
 const SettingsView: React.FC = () => {
   const selectRef = React.useRef<HTMLSelectElement>(null);
   const [view, setView] = useView();
   const [_playlist, setPlaylist] = usePlaylist();
   const playlists = useMyPlaylists();
-  const [berzerkMode, setBerzerkMode] = useSetting("berzerkMode", false);
+  const [berzerkMode, setBerzerkMode] = useSetting('berzerkMode', false);
 
   const handleSelect = () => {
     const val = selectRef?.current?.value;
@@ -80,7 +82,7 @@ const SettingsView: React.FC = () => {
         <FormLabel htmlFor="log-out">Session</FormLabel>
         <Button
           onClick={() => {
-            setView("logout");
+            setView('logout');
           }}
           leftIcon={<WarningIcon />}
           colorScheme="red"

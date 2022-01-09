@@ -1,7 +1,9 @@
-import React, { FC } from "react";
-import { VStack, Divider, Heading, Text } from "@chakra-ui/react";
+import React, { FC } from 'react';
+import {
+  VStack, Divider, Heading, Text,
+} from '@chakra-ui/react';
 
-import { SettingsIcon } from "@chakra-ui/icons";
+import { SettingsIcon } from '@chakra-ui/icons';
 
 const Help: FC = () => (
   <VStack alignItems="start" spacing={3}>
@@ -25,7 +27,9 @@ const Help: FC = () => (
       will also add that track to your queue.
     </Text>
     <Text>
-      To add to a playlist instead, click the settings (<SettingsIcon />) in the
+      To add to a playlist instead, click the settings (
+      <SettingsIcon />
+      ) in the
       nav bar, and then select the playlist you want instead of "Add to Queue"
     </Text>
   </VStack>
