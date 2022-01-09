@@ -11,12 +11,12 @@ import {
   Select,
 } from "@chakra-ui/react";
 
-import { WarningIcon } from '@chakra-ui/icons'
+import { WarningIcon } from "@chakra-ui/icons";
 import { useView, useSetting, usePlaylist, useMyPlaylists } from "./hooks";
 
 const SettingsView: React.FC = () => {
   const selectRef = React.useRef<HTMLSelectElement>(null);
-  const [view, setView] = useView()
+  const [view, setView] = useView();
   const [_playlist, setPlaylist] = usePlaylist();
   const playlists = useMyPlaylists();
   const [berzerkMode, setBerzerkMode] = useSetting("berzerkMode", false);
@@ -29,9 +29,7 @@ const SettingsView: React.FC = () => {
   return (
     <VStack spacing={4} alignItems="start">
       <Box>
-        <FormLabel htmlFor="add-to">
-          Add to
-        </FormLabel>
+        <FormLabel htmlFor="add-to">Add to</FormLabel>
         {playlists && (
           <Select
             id="add-to"
@@ -41,7 +39,9 @@ const SettingsView: React.FC = () => {
           >
             <optgroup label="Add to a playlist:">
               {playlists.map((playlist) => (
-                <option value={JSON.stringify(playlist)}>{playlist.name}</option>
+                <option value={JSON.stringify(playlist)}>
+                  {playlist.name}
+                </option>
               ))}
             </optgroup>
           </Select>
@@ -68,8 +68,8 @@ const SettingsView: React.FC = () => {
         <Box pt={2}>
           <Text textAlign="left" fontSize="xs" color="gray.600">
             Danger zone! Berzerk mode will start adding to your queue or
-            playlist every second. If this site freezes while in "berzerk"
-            mode, refresh the page.
+            playlist every second. If this site freezes while in "berzerk" mode,
+            refresh the page.
           </Text>
         </Box>
       </Box>
@@ -77,16 +77,20 @@ const SettingsView: React.FC = () => {
       <Divider borderColor="gray.200" borderWidth="2px" />
 
       <Box>
-        <FormLabel htmlFor="log-out">
-          Session
-        </FormLabel>
-        <Button onClick={() => { setView("logout") }} leftIcon={<WarningIcon />} colorScheme="red">
+        <FormLabel htmlFor="log-out">Session</FormLabel>
+        <Button
+          onClick={() => {
+            setView("logout");
+          }}
+          leftIcon={<WarningIcon />}
+          colorScheme="red"
+        >
           Log out
         </Button>
         <Box pt={2}>
           <Text textAlign="left" fontSize="xs" color="gray.600">
-            This will unauthorize this app for Spotify
-            and clear all data stored about your session.
+            This will unauthorize this app for Spotify and clear all data stored
+            about your session.
           </Text>
         </Box>
       </Box>

@@ -6,7 +6,7 @@ import { useCurrentTrack } from "./hooks";
 import SearchField from "./SearchField";
 import DividerWithWord from "./DividerWithWord";
 import Item from "./Item";
-import { SearchIcon } from "@chakra-ui/icons"
+import { SearchIcon } from "@chakra-ui/icons";
 
 const StartView: React.FC = () => {
   const currentTrack = useCurrentTrack();
@@ -14,9 +14,13 @@ const StartView: React.FC = () => {
   return (
     <VStack spacing={0} flex={1} width="100vw">
       <Flex direction="column" flex={1} align="center" maxWidth="90vw">
-        <Box p={5}><SearchIcon width="40px" height="40px" /></Box>
+        <Box p={5}>
+          <SearchIcon width="40px" height="40px" />
+        </Box>
         <Box>
-          <Text fontSize="md" textAlign="center">Click the search for your first recommendation seed.</Text>
+          <Text fontSize="md" textAlign="center">
+            Click the search for your first recommendation seed.
+          </Text>
         </Box>
       </Flex>
 
@@ -27,11 +31,13 @@ const StartView: React.FC = () => {
           </Box>
           <Flex direction="column" align="center" flex={1}>
             <Box p={5}>
-              <Text fontSize="40px">
-                ⏯
-              </Text>
+              <Text fontSize="40px">⏯</Text>
             </Box>
-            <Text fontSize="md" textAlign="center" px={4}>You have a track playing.<br />Click it to use as 1st seed</Text>
+            <Text fontSize="md" textAlign="center" px={4}>
+              You have a track playing.
+              <br />
+              Click it to use as 1st seed
+            </Text>
           </Flex>
           <Flex justify="center" py={2} align="center" minHeight="30vh">
             <Box>👉</Box>

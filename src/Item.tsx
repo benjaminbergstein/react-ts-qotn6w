@@ -1,7 +1,11 @@
 import React, { FC } from "react";
 import { VStack, Flex, Box, Text, Button, Checkbox } from "@chakra-ui/react";
 
-import { ChevronLeftIcon, ChevronUpIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import {
+  ChevronLeftIcon,
+  ChevronUpIcon,
+  ChevronRightIcon,
+} from "@chakra-ui/icons";
 
 import { Track, Artist, isSongLiked } from "./spotify";
 
@@ -38,9 +42,15 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
       minHeight={isSeed ? "80px" : "80px"}
       data-item={JSON.stringify(item)}
     >
-      {isSeed && isLiked && <Box zIndex={1} position="absolute" right="0" top="0">
-        <Box position="relative" left="-3px"><Text fontSize="14px" color="pint.500">❤️</Text></Box>
-      </Box>}
+      {isSeed && isLiked && (
+        <Box zIndex={1} position="absolute" right="0" top="0">
+          <Box position="relative" left="-3px">
+            <Text fontSize="14px" color="pint.500">
+              ❤️
+            </Text>
+          </Box>
+        </Box>
+      )}
       <Button
         minWidth={isSeed || isSearch ? undefined : "70vw"}
         size={isSeed ? "xs" : "md"}
@@ -49,7 +59,9 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
         height="100%"
         px={isSeed ? 1 : 2}
       >
-        {!isSeed && view === "tune" && (isSearch ? <ChevronLeftIcon /> : <ChevronUpIcon />)}
+        {!isSeed &&
+          view === "tune" &&
+          (isSearch ? <ChevronLeftIcon /> : <ChevronUpIcon />)}
 
         {image && (
           <Box
@@ -82,16 +94,18 @@ const Item: React.FC<ItemProps> = ({ context = "default", item }) => {
             </Box>
           </Box>
         </Box>
-        {!isSeed && <Box
-          flexGrow={0}
-          flexShrink={0}
-          minWidth="30px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {isLiked && <Text color="pint.500">❤️</Text>}
-        </Box>}
+        {!isSeed && (
+          <Box
+            flexGrow={0}
+            flexShrink={0}
+            minWidth="30px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            {isLiked && <Text color="pint.500">❤️</Text>}
+          </Box>
+        )}
         {!isSeed && view !== "tune" && <ChevronRightIcon />}
       </Button>
     </Flex>

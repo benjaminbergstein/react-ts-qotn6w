@@ -3,10 +3,10 @@ import { Box, Text, VStack, Spinner } from "@chakra-ui/react";
 
 import { useBerzerkMode, useSeeds, useRecommendations } from "./hooks";
 
-import Navbar from "./Navbar2";
+import Navbar from "./Navbar";
 import Seeds from "./Seeds";
 import Item from "./Item";
-import StartView from "./StartView";
+import Start from "./Start";
 
 const TuneView: FC = () => {
   const [seeds] = useSeeds();
@@ -46,7 +46,7 @@ const TuneView: FC = () => {
           ))}
         </VStack>
       )}
-      {!anySeeds && <StartView />}
+      {!anySeeds && <Start />}
     </>
   );
 };

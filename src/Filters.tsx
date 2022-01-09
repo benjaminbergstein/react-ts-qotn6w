@@ -13,7 +13,9 @@ const Controls: FC = () => {
   return (
     <Button
       mr={3}
-      onClick={() => { clearSliders() }}
+      onClick={() => {
+        clearSliders();
+      }}
       variant="outline"
       colorScheme="red"
       leftIcon={<RepeatIcon />}

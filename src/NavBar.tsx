@@ -1,66 +1,28 @@
 import React, { FC } from "react";
+import { VStack, Divider, Heading, ButtonGroup, Text } from "@chakra-ui/react";
 
-import { Divider, Button, Text, HStack, Box, VStack } from "@chakra-ui/react";
-import { useSetting, useView } from "./hooks";
-import { View } from "./types";
-import Card from "./Card";
+import { SearchIcon, SettingsIcon, QuestionIcon } from "@chakra-ui/icons";
 
-const Item: FC<{ view: View }> = ({ view, children }) => {
-  const [_view, setView] = useView();
-  const [navOpen, setNavOpen] = useSetting("nav:open");
+import Filters from "./Filters";
+import Settings from "./Settings";
+import SearchDrawer from "./SearchDrawer";
+import Help from "./Help";
+import Drawer from "./Drawer";
 
-  return (
-    <Box width="100%">
-      <Button
-        onClick={() => {
-          setNavOpen(false);
-          setView(view);
-        }}
-        width="100%"
-        variant="ghost"
-      >
-        {children}
-      </Button>
-    </Box>
-  );
-};
+const Navbar: FC = () => (
+  <ButtonGroup display="flex" flex="1" isAttached>
+    <Filters />
 
-const NavBar: FC = () => {
-  const [navOpen, setNavOpen] = useSetting("nav:open");
+    <SearchDrawer />
 
-  return (
-    <React.Fragment>
-      <HStack spacing="20px" justify="space-between" m="10px">
-        <Box>🎶</Box>
-        <Box>
-          <Text
-            fontWeight={700}
-            style={{ fontStyle: "italic", fontVariant: "small-caps" }}
-          >
-            SpotifyTuner&trade;
-          </Text>
-        </Box>
-        <Box>
-          <Button onClick={() => setNavOpen(!navOpen)} variant="outline">
-            🍔
-          </Button>
-        </Box>
-      </HStack>
-      {navOpen && (
-        <Card>
-          <Item view="start">Start</Item>
-          <Divider />
-          <Item view="search">Search</Item>
-          <Divider />
-          <Item view="tune">Tune</Item>
-          <Divider />
-          <Item view="settings">Settings</Item>
-          <Divider />
-          <Item view="logout">Log out</Item>
-        </Card>
-      )}
-    </React.Fragment>
-  );
-};
+    <Drawer toggle={<SettingsIcon />} title="Settings">
+      <Settings />
+    </Drawer>
 
-export default NavBar;
+    <Drawer toggle={<QuestionIcon />} title="Help">
+      <Help />
+    </Drawer>
+  </ButtonGroup>
+);
+
+export default Navbar;

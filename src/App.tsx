@@ -3,24 +3,14 @@ import { Flex } from "@chakra-ui/react";
 
 import { useView, useCaptureToken, useAuthorization } from "./hooks";
 
-import NavBar from "./NavBar";
-import LogOut from "./LogOut";
-import SearchField from "./SearchField";
-import DividerWithWord from "./DividerWithWord";
-
-import SettingsView from "./SettingsView";
-import SearchView from "./SearchView";
-import StartView from "./StartView";
 import AuthorizeView from "./AuthorizeView";
 import TuneView from "./TuneView";
+import LogOut from "./LogOut";
 
 import { View } from "./types";
 
 const ViewMap: Record<View, FC> = {
-  settings: SettingsView,
   authorize: AuthorizeView,
-  start: StartView,
-  search: SearchView,
   tune: TuneView,
   logout: LogOut,
 };
