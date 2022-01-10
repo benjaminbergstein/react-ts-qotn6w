@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef } from "react";
 import {
   Button,
   useDisclosure,
@@ -9,15 +9,17 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
 type Props = {
+  placement?: "right" | "left";
   title?: string | JSX.Element;
   toggle: string | JSX.Element;
   controls?: React.ComponentType;
 };
 
 const Drawer: FC<Props> = ({
+  placement = "right",
   toggle = undefined,
   title = undefined,
   children,
@@ -40,7 +42,7 @@ const Drawer: FC<Props> = ({
       </Button>
       <_Drawer
         isOpen={isOpen}
-        placement="right"
+        placement={placement}
         onClose={onClose}
         finalFocusRef={btnRef}
       >

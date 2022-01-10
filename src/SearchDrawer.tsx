@@ -43,7 +43,7 @@ const StartView: React.FC = () => {
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="right"
+        placement="left"
         onClose={onClose}
         finalFocusRef={btnRef}
       >
