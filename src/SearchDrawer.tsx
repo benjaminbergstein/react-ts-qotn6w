@@ -1,4 +1,4 @@
-import React, { FC, useRef } from 'react';
+import React, { FC, useRef } from "react";
 import {
   Button,
   useDisclosure,
@@ -10,23 +10,24 @@ import {
   DrawerHeader,
   DrawerFooter,
   VStack,
-  Box,
-  Text,
-  Flex,
-} from '@chakra-ui/react';
-import { SearchIcon } from '@chakra-ui/icons';
-import { useCurrentTrack, useSearch } from './hooks';
+} from "@chakra-ui/react";
+import { SearchIcon } from "@chakra-ui/icons";
+import { useQ, useSearch } from "./hooks";
 
-import SearchField from './SearchField';
-import DividerWithWord from './DividerWithWord';
-import Item from './Item';
+import SearchField from "./SearchField";
+import ItemSkeleton from "./ItemSkeleton";
+import Item from "./Item";
 
 const StartView: React.FC = () => {
-  const currentTrack = useCurrentTrack();
-
-  const results = useSearch();
+  const [_q, setQ] = useQ();
+  const { results, isValidating } = useSearch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
+
+  const handleSelect = () => {
+    onClose();
+    setQ("");
+  };
 
   return (
     <>
@@ -54,11 +55,29 @@ const StartView: React.FC = () => {
           <DrawerBody>
             <>
               <VStack>
-                {results?.tracks?.items
-                  && results?.tracks?.items.map((track) => (
+                {isValidating && (
+                  <>
+                    <ItemSkeleton />
+                    <ItemSkeleton />
+                    <ItemSkeleton />
+                    <ItemSkeleton />
+                    <ItemSkeleton />
+                  </>
+                )}
+                {!isValidating &&
+                  results?.tracks?.items &&
+                  results?.tracks?.items.map((track) => (
                     <>
-                      <Item context="search" item={track} />
-                      <Item context="search" item={track.artists[0]} />
+                      <Item
+                        onClick={handleSelect}
+                        context="search"
+                        item={track}
+                      />
+                      <Item
+                        onClick={handleSelect}
+                        context="search"
+                        item={track.artists[0]}
+                      />
                     </>
                   ))}
               </VStack>

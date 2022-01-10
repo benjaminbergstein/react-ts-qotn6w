@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import {
   Box,
   Button,
@@ -6,10 +6,10 @@ import {
   InputLeftElement,
   InputRightElement,
   Input,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { SearchIcon } from '@chakra-ui/icons';
-import { useView, useQ } from './hooks';
+import { SearchIcon } from "@chakra-ui/icons";
+import { useView, useQ } from "./hooks";
 
 const SearchField: FC = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -32,6 +32,7 @@ const SearchField: FC = () => {
       <form onSubmit={handleSubmit}>
         <InputGroup>
           <Input
+            autoFocus
             defaultValue={q}
             ref={inputRef}
             type="search"
