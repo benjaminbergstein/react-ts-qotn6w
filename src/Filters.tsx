@@ -30,7 +30,7 @@ const Filters: FC = () => {
 
   return (
     <Drawer
-      placement="left"
+      placement="right"
       toggle={<HamburgerIcon />}
       title="Filters"
       controls={Controls}

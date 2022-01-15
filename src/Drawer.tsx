@@ -31,14 +31,16 @@ const Drawer: FC<Props> = ({
   return (
     <>
       <Button
+        width="100%"
         flex="1"
         variant="outline"
         py={3}
         ref={btnRef}
         colorScheme="teal"
         onClick={onOpen}
+        leftIcon={toggle as React.ReactElement}
       >
-        {toggle}
+        {title}
       </Button>
       <_Drawer
         isOpen={isOpen}

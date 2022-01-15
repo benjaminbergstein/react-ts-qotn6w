@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { Box, Text, VStack } from "@chakra-ui/react";
 
-import { useBerzerkMode, useSeeds, useRecommendations } from "./hooks";
+import { useWildMode, useSeeds, useRecommendations } from "./hooks";
 
 import Navbar from "./Navbar";
 import Seeds from "./Seeds";
@@ -13,16 +13,18 @@ const TuneView: FC = () => {
   const [seeds] = useSeeds();
   const { recommendations, isValidating } = useRecommendations();
 
-  useBerzerkMode();
+  useWildMode();
 
   const anySeeds = seeds.size !== 0;
 
   return (
     <>
-      <Box bg="gray.50" p={3} mb={5} boxShadow="md">
-        <Navbar />
-        {anySeeds && <Seeds />}
-      </Box>
+      <Navbar />
+      {anySeeds && (
+        <Box bg="gray.50" p={3} mb={5} boxShadow="md">
+          <Seeds />
+        </Box>
+      )}
       {anySeeds && (
         <VStack alignItems="start" p={3}>
           <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>

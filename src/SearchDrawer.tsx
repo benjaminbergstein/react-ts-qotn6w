@@ -18,13 +18,18 @@ import SearchField from "./SearchField";
 import ItemSkeleton from "./ItemSkeleton";
 import Item from "./Item";
 
-const StartView: React.FC = () => {
+type Props = {
+  closeParent: () => void;
+};
+
+const StartView: React.FC<Props> = ({ closeParent }) => {
   const [_q, setQ] = useQ();
   const { results, isValidating } = useSearch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
   const handleSelect = () => {
+    closeParent();
     onClose();
     setQ("");
   };
@@ -38,12 +43,14 @@ const StartView: React.FC = () => {
         ref={btnRef}
         colorScheme="teal"
         onClick={onOpen}
+        width="100%"
+        leftIcon={<SearchIcon />}
       >
-        <SearchIcon />
+        Search
       </Button>
       <Drawer
         isOpen={isOpen}
-        placement="left"
+        placement="right"
         onClose={onClose}
         finalFocusRef={btnRef}
       >

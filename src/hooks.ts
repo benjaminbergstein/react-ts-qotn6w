@@ -131,12 +131,12 @@ export const useMyPlaylists = () => {
 export const useRecommendations = () => {
   const [seeds] = useSeeds();
   const [sliders] = useSliders();
-  const [berzerkMode] = useSetting("berzerkMode", false);
+  const [wildMode] = useSetting("wildMode", false);
 
   const trueSeeds = new Array(seeds.size > 5 ? 5 : seeds.size)
     .fill("")
     .map((_, i) => {
-      const r = berzerkMode
+      const r = wildMode
         ? Math.round(Math.random() * seeds.size)
         : seeds.size - i;
       return Array.from(seeds)[r % seeds.size];
@@ -169,13 +169,13 @@ export const useAuthorization = () => {
   }, [isAuthorized]);
 };
 
-export const useBerzerkMode = () => {
+export const useWildMode = () => {
   const [_, select] = useSeeds();
   const { recommendations, isValidating } = useRecommendations();
-  const [berzerkMode] = useSetting("berzerkMode", false);
+  const [wildMode] = useSetting("wildMode", false);
 
   React.useEffect(() => {
-    if (!berzerkMode) return;
+    if (!wildMode) return;
     if (!recommendations?.tracks?.length) return;
 
     const selection = Math.round(
@@ -190,5 +190,5 @@ export const useBerzerkMode = () => {
     return () => {
       clearTimeout(timeout);
     };
-  }, [berzerkMode, isValidating, recommendations?.tracks?.length]);
+  }, [wildMode, isValidating, recommendations?.tracks?.length]);
 };

@@ -16,7 +16,7 @@ const AuthorizeView: React.FC = () => (
   >
     <VStack spacing="30px" align="right" maxWidth="600px">
       <Heading color="pink.600" size="sm" style={{ fontVariant: 'small-caps' }}>
-        <em>SpotifyTuner&trade;</em>
+        <em>Wildtuner</em>
       </Heading>
       <Heading color="gray.800" size="lg">
         Meander through new music
