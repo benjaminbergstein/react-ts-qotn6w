@@ -21,23 +21,28 @@ const TuneView: FC = () => {
   return (
     <>
       <HStack spacing="0" justifyContent="space-between">
-        <Box width="100px">
+        <Box height="20px" display="block">
           <Logo />
         </Box>
-        <Box width="100px" display={["block", "none"]}>
+        <Box height="20px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box width="100px" display={["block", "none"]}>
+        <Box height="20px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box width="100px" display={["block", "none"]}>
+        <Box height="20px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box width="100px" display={["block", "none"]}>
+        <Box height="20px" display={["block", "none"]}>
+          <Logo />
+        </Box>
+        <Box height="20px" display={["block", "none"]}>
+          <Logo />
+        </Box>
+        <Box height="20px" display={["block", "none"]}>
           <Logo />
         </Box>
       </HStack>
-      <Navbar />
       {anySeeds && (
         <Box
           bg="gray.50"
@@ -75,6 +80,7 @@ const TuneView: FC = () => {
         </VStack>
       )}
       {!anySeeds && <Start />}
+      <Navbar />
     </>
   );
 };
