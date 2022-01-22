@@ -79,7 +79,7 @@ const Seeds: FC = () => {
           {seeds.size} {seeds.size === 1 ? "seed" : "seeds"}
         </Button>
       </Box>
-      <Drawer isOpen={isOpen} placement="top" onClose={onClose}>
+      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader>
