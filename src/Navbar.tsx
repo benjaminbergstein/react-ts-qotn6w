@@ -19,6 +19,7 @@ import {
   SearchIcon,
   SettingsIcon,
   QuestionIcon,
+  DeleteIcon,
 } from "@chakra-ui/icons";
 
 import Filters from "./Filters";
@@ -26,6 +27,7 @@ import Settings from "./Settings";
 import SearchDrawer from "./SearchDrawer";
 import Help from "./Help";
 import Drawer from "./Drawer";
+import ClearButton from "./ClearButton";
 
 const Navbar: FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,6 +73,7 @@ const Navbar: FC = () => {
               <Drawer toggle={<QuestionIcon />} title="Help">
                 <Help />
               </Drawer>
+              <ClearButton closeParent={onClose} />
             </VStack>
           </DrawerBody>
 

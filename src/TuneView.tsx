@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { Box, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 
 import { useWildMode, useSeeds, useRecommendations } from "./hooks";
 
@@ -8,6 +8,7 @@ import Seeds from "./Seeds";
 import Item from "./Item";
 import ItemSkeleton from "./ItemSkeleton";
 import Start from "./Start";
+import Logo from "./Logo";
 
 const TuneView: FC = () => {
   const [seeds] = useSeeds();
@@ -19,9 +20,40 @@ const TuneView: FC = () => {
 
   return (
     <>
+      <HStack
+        spacing="0"
+        borderWidth="1px 0"
+        borderStyle="solid"
+        borderColor="pink.500"
+      >
+        <Box width="100px">
+          <Logo />
+        </Box>
+        <Box width="100px">
+          <Logo />
+        </Box>
+        <Box width="100px">
+          <Logo />
+        </Box>
+        <Box width="100px">
+          <Logo />
+        </Box>
+        <Box width="100px">
+          <Logo />
+        </Box>
+      </HStack>
       <Navbar />
       {anySeeds && (
-        <Box bg="gray.50" p={3} mb={5} boxShadow="md">
+        <Box
+          bg="gray.50"
+          p={3}
+          mb={5}
+          boxShadow="md"
+          position="sticky"
+          top="0px"
+          left="0px"
+          zIndex={1}
+        >
           <Seeds />
         </Box>
       )}

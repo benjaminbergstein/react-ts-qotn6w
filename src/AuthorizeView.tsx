@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
-import {
-  Heading, Text, Button, VStack, Flex,
-} from '@chakra-ui/react';
-import { ExternalLinkIcon } from '@chakra-ui/icons';
-import { getAuthUrl } from './spotify';
+import React, { FC } from "react";
+import { Heading, Text, Button, VStack, Flex } from "@chakra-ui/react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { getAuthUrl } from "./spotify";
+import Logo from "./Logo";
 
 const AuthorizeView: React.FC = () => (
   <Flex
@@ -15,9 +14,7 @@ const AuthorizeView: React.FC = () => (
     justify="center"
   >
     <VStack spacing="30px" align="right" maxWidth="600px">
-      <Heading color="pink.600" size="sm" style={{ fontVariant: 'small-caps' }}>
-        <em>Wildtuner</em>
-      </Heading>
+      <Logo />
       <Heading color="gray.800" size="lg">
         Meander through new music
       </Heading>
@@ -29,7 +26,9 @@ const AuthorizeView: React.FC = () => (
         / danceability / popularity).
       </Text>
       <a href={getAuthUrl()}>
-        <Button rightIcon={<ExternalLinkIcon />} colorScheme="pink">Connect Spotify</Button>
+        <Button rightIcon={<ExternalLinkIcon />} colorScheme="pink">
+          Connect Spotify
+        </Button>
       </a>
     </VStack>
   </Flex>

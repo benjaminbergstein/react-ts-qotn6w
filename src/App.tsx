@@ -6,6 +6,7 @@ import { useView, useCaptureToken, useAuthorization } from "./hooks";
 import AuthorizeView from "./AuthorizeView";
 import TuneView from "./TuneView";
 import LogOut from "./LogOut";
+import useSWR from "swr";
 
 import { View } from "./types";
 

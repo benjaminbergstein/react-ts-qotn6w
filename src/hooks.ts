@@ -69,7 +69,8 @@ export const useSeeds = (): [
   SelectFunctionType,
   typeof enqueued,
   typeof enqueue,
-  () => void
+  () => void,
+  number
 ] => {
   const [playlist] = usePlaylist();
   const [view, setView] = useView();
@@ -101,7 +102,7 @@ export const useSeeds = (): [
       }
     };
 
-  return [seeds, select, enqueued, enqueue, resetSeeds];
+  return [seeds, select, enqueued, enqueue, resetSeeds, seedsArr.length];
 };
 
 export const useToken = () =>
