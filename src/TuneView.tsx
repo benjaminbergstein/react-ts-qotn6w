@@ -43,20 +43,7 @@ const TuneView: FC = () => {
           <Logo />
         </Box>
       </HStack>
-      {anySeeds && (
-        <Box
-          bg="gray.50"
-          p={3}
-          mb={5}
-          boxShadow="md"
-          position="sticky"
-          top="0px"
-          left="0px"
-          zIndex={1}
-        >
-          <Seeds />
-        </Box>
-      )}
+      {anySeeds && <Seeds />}
       {anySeeds && (
         <VStack alignItems="start" p={3}>
           <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>

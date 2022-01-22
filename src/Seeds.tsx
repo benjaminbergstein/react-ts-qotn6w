@@ -56,18 +56,29 @@ const Seeds: FC = () => {
   }, [countSeeds]);
 
   return (
-    <Box>
-      <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>
-        Recommendation "Seeds"
-      </Text>
-      <Button
-        as={animated.div}
-        onClick={onOpen}
-        width="100%"
-        style={styles as unknown as CSSProperties}
+    <>
+      <Box
+        bg="gray.50"
+        p={3}
+        mb={5}
+        boxShadow="md"
+        position="sticky"
+        top="0px"
+        left="0px"
+        zIndex={1}
       >
-        {seeds.size} {seeds.size === 1 ? "seed" : "seeds"}
-      </Button>
+        <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>
+          Recommendation "Seeds"
+        </Text>
+        <Button
+          as={animated.div}
+          onClick={onOpen}
+          width="100%"
+          style={styles as unknown as CSSProperties}
+        >
+          {seeds.size} {seeds.size === 1 ? "seed" : "seeds"}
+        </Button>
+      </Box>
       <Drawer isOpen={isOpen} placement="top" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
@@ -101,8 +112,7 @@ const Seeds: FC = () => {
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
-      <Divider />
-    </Box>
+    </>
   );
 };
 
