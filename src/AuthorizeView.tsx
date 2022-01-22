@@ -3,6 +3,7 @@ import { Heading, Text, Button, VStack, Flex } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { getAuthUrl } from "./spotify";
 import Logo from "./Logo";
+import Copyright from "./Copyright";
 
 const AuthorizeView: React.FC = () => (
   <Flex
@@ -14,7 +15,8 @@ const AuthorizeView: React.FC = () => (
     justify="center"
   >
     <VStack spacing="30px" align="right" maxWidth="600px">
-      <Logo />
+      <Logo width="300px" height="72px" />
+
       <Heading color="gray.800" size="lg">
         Meander through new music
       </Heading>
@@ -31,6 +33,7 @@ const AuthorizeView: React.FC = () => (
         </Button>
       </a>
     </VStack>
+    <Copyright layout="fixed" />
   </Flex>
 );
 

@@ -9,6 +9,7 @@ import Item from "./Item";
 import ItemSkeleton from "./ItemSkeleton";
 import Start from "./Start";
 import Logo from "./Logo";
+import Copyright from "./Copyright";
 
 const TuneView: FC = () => {
   const [seeds] = useSeeds();
@@ -20,26 +21,26 @@ const TuneView: FC = () => {
 
   return (
     <>
-      <HStack spacing="0" justifyContent="space-between">
-        <Box height="20px" display="block">
+      <HStack spacing="0" justifyContent="center">
+        <Box my="20px" width="200px" height="50px" display={["none", "block"]}>
           <Logo />
         </Box>
-        <Box height="20px" display={["block", "none"]}>
+        <Box width="100px" height="25px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box height="20px" display={["block", "none"]}>
+        <Box width="100px" height="25px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box height="20px" display={["block", "none"]}>
+        <Box width="100px" height="25px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box height="20px" display={["block", "none"]}>
+        <Box width="100px" height="25px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box height="20px" display={["block", "none"]}>
+        <Box width="100px" height="25px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box height="20px" display={["block", "none"]}>
+        <Box width="100px" height="25px" display={["block", "none"]}>
           <Logo />
         </Box>
       </HStack>
@@ -67,6 +68,7 @@ const TuneView: FC = () => {
         </VStack>
       )}
       {!anySeeds && <Start />}
+      <Copyright layout="static" />
       <Navbar />
     </>
   );

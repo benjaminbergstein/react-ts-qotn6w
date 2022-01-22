@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "module": "commonjs",
     "lib": ["esnext", "dom"],
     "esModuleInterop": true,
     "moduleResolution": "node",

@@ -1,11 +1,14 @@
-import React, { FC } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import React, { FC, Suspense } from "react";
+import { Spinner, Box, Flex, Text } from "@chakra-ui/react";
+import { isServer } from "./constants";
 
 import { Helmet } from "react-helmet";
 import { useView, useCaptureToken, useAuthorization } from "./hooks";
 
 import AuthorizeView from "./AuthorizeView";
-import TuneView from "./TuneView";
+
+const TuneView = React.lazy(() => import("./TuneView"));
+
 import LogOut from "./LogOut";
 
 import { View } from "./types";
@@ -31,8 +34,18 @@ const App: FC = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Helmet>
       <Flex direction="column" height="100vh">
-        <CurrentView />
-        <Box height="180px"> </Box>
+        {!isServer && (
+          <Suspense
+            fallback={() => (
+              <Flex height="100vh" alignItems="center">
+                <Spinner />
+              </Flex>
+            )}
+          >
+            <CurrentView />
+          </Suspense>
+        )}
+        {isServer && <CurrentView />}
       </Flex>
     </>
   );
