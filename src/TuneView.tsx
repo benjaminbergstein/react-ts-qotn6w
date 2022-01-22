@@ -20,25 +20,20 @@ const TuneView: FC = () => {
 
   return (
     <>
-      <HStack
-        spacing="0"
-        borderWidth="1px 0"
-        borderStyle="solid"
-        borderColor="pink.500"
-      >
+      <HStack spacing="0" justifyContent="space-between">
         <Box width="100px">
           <Logo />
         </Box>
-        <Box width="100px">
+        <Box width="100px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box width="100px">
+        <Box width="100px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box width="100px">
+        <Box width="100px" display={["block", "none"]}>
           <Logo />
         </Box>
-        <Box width="100px">
+        <Box width="100px" display={["block", "none"]}>
           <Logo />
         </Box>
       </HStack>

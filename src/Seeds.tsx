@@ -35,8 +35,9 @@ const Seeds: FC = () => {
 
   const styles = useSpring({
     config: {
-      velocity: 100,
-      duration: toggle ? 200 : 100,
+      clamp: true,
+      velocity: 1000,
+      duration: toggle ? 50 : 300,
       easing: easings.easeInBounce,
     },
     onRest: () => {
@@ -44,9 +45,9 @@ const Seeds: FC = () => {
         setToggle(() => false);
       }, 50);
     },
-    transform: toggle ? "scale(1.04)" : "scale(1.01)",
+    transform: toggle ? "scale(1.15)" : "scale(1.01)",
     boxShadow: toggle
-      ? "0px 0px 5px 0 rgb(0 0 0 / 5%)"
+      ? "0px 0px 5px 0 rgb(0 0 0 / 15%)"
       : "0px 0px 0px 0px transparent",
   });
 
