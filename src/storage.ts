@@ -1,7 +1,8 @@
-import useSWR from 'swr';
+import useSWR from "swr";
 
-const VERSION = '1558635';
+const VERSION = "1558635";
 const key = (k) => `bb:${VERSION}:spotify:mixtape:${k}`;
+import { isServer } from "./constants";
 
 export const fetch = (k, defaultValue = undefined) => {
   try {
@@ -24,17 +25,25 @@ export const remove = (k) => {
 };
 
 export function useLocalStorageItem<T>(k: string, defaultValue: T) {
-  const fallbackData = fetch(k, defaultValue);
+  const fallbackData = isServer ? defaultValue : fetch(k, defaultValue);
   const swrReturn = useSWR<T>(
     key(k),
     () => Promise.resolve(fetch(k, defaultValue)),
-    { fallbackData },
+    { fallbackData }
   );
+
+  if (isServer) {
+    return [defaultValue, () => {}, () => {}] as [
+      T,
+      (_n: T | ((old: T) => T)) => void,
+      () => void
+    ];
+  }
 
   function set(item: T);
   function set(item: (old: T) => T);
   function set(item) {
-    if (typeof item === 'function') {
+    if (typeof item === "function") {
       const current = fetch(k);
       set(item(current));
       return;
