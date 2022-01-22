@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Text,
   Box,
@@ -7,18 +7,23 @@ import {
   SliderTrack,
   SliderThumb,
   SliderFilledTrack,
-} from '@chakra-ui/react';
-import { sentenceCase } from 'change-case';
-import { RecommendFilter, filterScales, defaultFilters } from './spotify';
+} from "@chakra-ui/react";
+import { sentenceCase } from "change-case";
+import {
+  RecommendFilter,
+  filterScales,
+  defaultFilters,
+  RecommendFilters,
+} from "./spotify";
 
-import { useSliders } from './hooks';
+import { useSliders } from "./hooks";
 
 const getF = (filter) => {
-  const letters = filter.split('');
-  const minOrMax = letters.slice(0, 3).join('');
-  const oppositeMinOrMax = minOrMax === 'min' ? 'max' : 'min';
-  const dimension = letters.slice(3).join('');
-  return [minOrMax === 'min', dimension, `${oppositeMinOrMax}${dimension}`];
+  const letters = filter.split("");
+  const minOrMax = letters.slice(0, 3).join("");
+  const oppositeMinOrMax = minOrMax === "min" ? "max" : "min";
+  const dimension = letters.slice(3).join("");
+  return [minOrMax === "min", dimension, `${oppositeMinOrMax}${dimension}`];
 };
 
 const FilterSlider: React.FC<{
@@ -41,18 +46,16 @@ const FilterSlider: React.FC<{
     if (!isMin && otherVal > val) {
       currentFilters[otherDimension] = val < 20 ? 0 : val - 20;
     }
-    setSliders((sliders) => ({ ...currentFilters, [filter]: val }));
+    setSliders((currentFilters) => ({
+      ...currentFilters,
+      [filter]: val,
+    }));
   };
 
   return (
     <Box width="100%">
       <Text color="gray.600" fontSize="14px" textTransform="uppercase">
-        {sentenceCase(filter)}
-        {' '}
-        -
-        {(sliders[filter] / 100) * scale}
-        /
-        {scale}
+        {sentenceCase(filter)} -{(sliders[filter] / 100) * scale}/{scale}
       </Text>
       <Box p={2}>
         <Slider
