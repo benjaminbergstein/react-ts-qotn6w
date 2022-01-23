@@ -2,6 +2,7 @@ import React, { FC, useRef } from "react";
 import {
   Button,
   useDisclosure,
+  IconButton,
   Drawer,
   DrawerOverlay,
   DrawerBody,
@@ -20,14 +21,16 @@ import Item from "./Item";
 
 type Props = {
   closeParent: () => void;
+  context?: "navbar" | "start";
 };
 
-const StartView: React.FC<Props> = ({ closeParent }) => {
+const StartView: React.FC<Props> = ({ context = "navbar", closeParent }) => {
   const [_q, setQ] = useQ();
   const { results, isValidating } = useSearch();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<HTMLButtonElement>(null);
 
+  const isStart = context === "start";
   const handleSelect = () => {
     closeParent();
     onClose();
@@ -36,18 +39,31 @@ const StartView: React.FC<Props> = ({ closeParent }) => {
 
   return (
     <>
-      <Button
-        flex="1"
-        variant="outline"
-        py={3}
-        ref={btnRef}
-        colorScheme="teal"
-        onClick={onOpen}
-        width="100%"
-        leftIcon={<SearchIcon />}
-      >
-        Search
-      </Button>
+      {isStart && (
+        <IconButton
+          onClick={onOpen}
+          variant="outline"
+          aria-label="Search"
+          my={3}
+          flexShrink={0}
+          p={10}
+          icon={<SearchIcon width="40px" height="40px" />}
+        />
+      )}
+      {!isStart && (
+        <Button
+          flex="1"
+          variant="outline"
+          py={4}
+          ref={btnRef}
+          colorScheme="teal"
+          onClick={onOpen}
+          width="100%"
+          leftIcon={<SearchIcon />}
+        >
+          Search
+        </Button>
+      )}
       <Drawer
         isOpen={isOpen}
         placement="right"

@@ -21,29 +21,28 @@ const TuneView: FC = () => {
 
   return (
     <>
-      <HStack spacing="0" justifyContent="center">
-        <Box my="20px" width="200px" height="50px" display={["none", "block"]}>
-          <Logo />
-        </Box>
-        <Box width="100px" height="25px" display={["block", "none"]}>
-          <Logo />
-        </Box>
-        <Box width="100px" height="25px" display={["block", "none"]}>
-          <Logo />
-        </Box>
-        <Box width="100px" height="25px" display={["block", "none"]}>
-          <Logo />
-        </Box>
-        <Box width="100px" height="25px" display={["block", "none"]}>
-          <Logo />
-        </Box>
-        <Box width="100px" height="25px" display={["block", "none"]}>
-          <Logo />
-        </Box>
-        <Box width="100px" height="25px" display={["block", "none"]}>
-          <Logo />
-        </Box>
-      </HStack>
+      <Box width="100vw" overflowX="hidden">
+        <HStack spacing="0" justifyContent="center">
+          <Box
+            my="20px"
+            width="100px"
+            height="25px"
+            display={["none", "block"]}
+          >
+            <Logo width="100%" height="100%" />
+          </Box>
+          {new Array(8).fill("").map(() => (
+            <Box
+              flexShrink={0}
+              width="100px"
+              height={["25px", "auto"]}
+              display={["block", "none"]}
+            >
+              <Logo />
+            </Box>
+          ))}
+        </HStack>
+      </Box>
       {anySeeds && <Seeds />}
       {anySeeds && (
         <VStack alignItems="start" p={3}>
