@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useRef } from "react";
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 
 import { useWildMode, useSeeds, useRecommendations } from "./hooks";
@@ -10,11 +10,16 @@ import ItemSkeleton from "./ItemSkeleton";
 import Start from "./Start";
 import Logo from "./Logo";
 import Copyright from "./Copyright";
+import { arrayOf } from "./utils";
+import Filler from "./Filler";
 
 const TuneView: FC = () => {
   const [seeds] = useSeeds();
   const { recommendations, isValidating } = useRecommendations();
+  const previousRecommendationsCountRef = useRef<number>(10);
 
+  previousRecommendationsCountRef.current =
+    recommendations?.tracks?.length || 10;
   useWildMode();
 
   const anySeeds = seeds.size !== 0;
@@ -31,7 +36,7 @@ const TuneView: FC = () => {
           >
             <Logo width="100%" height="100%" />
           </Box>
-          {new Array(8).fill("").map(() => (
+          <Filler n={8}>
             <Box
               flexShrink={0}
               width="100px"
@@ -40,7 +45,7 @@ const TuneView: FC = () => {
             >
               <Logo />
             </Box>
-          ))}
+          </Filler>
         </HStack>
       </Box>
       {anySeeds && <Seeds />}
@@ -50,13 +55,9 @@ const TuneView: FC = () => {
             Recommendations
           </Text>
           {isValidating && (
-            <>
+            <Filler n={seeds.size > 10 ? seeds.size : 10}>
               <ItemSkeleton />
-              <ItemSkeleton />
-              <ItemSkeleton />
-              <ItemSkeleton />
-              <ItemSkeleton />
-            </>
+            </Filler>
           )}
           {!isValidating &&
             recommendations?.tracks &&
