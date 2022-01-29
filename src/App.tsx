@@ -1,4 +1,6 @@
 import React, { FC, Suspense } from "react";
+import { ErrorBoundary } from 'react-error-boundary'
+
 import { Spinner, Box, Flex, Text } from "@chakra-ui/react";
 import { isServer } from "./constants";
 
@@ -42,7 +44,9 @@ const App: FC = () => {
               </Flex>
             )}
           >
-            <CurrentView />
+            <ErrorBoundary FallbackComponent={AuthorizeView}>
+              <CurrentView />
+            </ErrorBoundary>
           </Suspense>
         )}
         {isServer && <CurrentView />}

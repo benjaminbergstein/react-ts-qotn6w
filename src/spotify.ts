@@ -24,7 +24,12 @@ const fetch = async (
       Authorization: `Bearer ${fetchStorageItem("token")}`,
     },
     ...(body && { body: JSON.stringify(body) }),
-  }).then((res) => res.json());
+  }).then((res) => {
+    if (res.status !== 200) {
+      const error = new Error("not_authorized");
+    }
+    return res.json();
+  });
 
 export type SpotifyThing = {
   uri: string;
