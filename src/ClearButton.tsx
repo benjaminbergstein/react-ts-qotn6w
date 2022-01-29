@@ -21,7 +21,7 @@ import {
 } from "@chakra-ui/react";
 
 import { DeleteIcon } from "@chakra-ui/icons";
-import { useSeeds, useSliders } from "./hooks";
+import { useQuizSelections, useQuizStep, useSeeds, useSliders } from "./hooks";
 
 type Props = {
   closeParent: () => void;
@@ -30,6 +30,9 @@ type Props = {
 const ClearButton: FC<Props> = ({ closeParent }) => {
   const [_, __, ___, ____, resetSeeds] = useSeeds();
   const [_sliders, _setSliders, resetSliders] = useSliders();
+  const [_quizSelections, _setQuizSelections, resetQuizSelections] =
+    useQuizSelections();
+  const [_quizStep, _setQuizStep, resetQuizStep] = useQuizStep();
 
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
@@ -38,6 +41,8 @@ const ClearButton: FC<Props> = ({ closeParent }) => {
   const onClear = () => {
     resetSeeds();
     resetSliders();
+    resetQuizSelections();
+    resetQuizStep();
     closeParent();
     onClose();
   };

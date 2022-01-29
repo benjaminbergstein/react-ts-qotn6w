@@ -10,7 +10,6 @@ import ItemSkeleton from "./ItemSkeleton";
 import Start from "./Start";
 import Logo from "./Logo";
 import Copyright from "./Copyright";
-import { arrayOf } from "./utils";
 import Filler from "./Filler";
 
 const TuneView: FC = () => {

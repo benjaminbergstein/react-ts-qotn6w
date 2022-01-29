@@ -17,10 +17,10 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 
-import { RepeatIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, RepeatIcon } from "@chakra-ui/icons";
 import { cacheGet } from "./spotify";
 
-import { useSeeds } from "./hooks";
+import { useSeeds, useSetting } from "./hooks";
 
 import Item from "./Item";
 import { easings, animated, useSpring } from "react-spring";
@@ -29,9 +29,13 @@ import ClearButton from "./ClearButton";
 const Seeds: FC = () => {
   const [seeds, _, __, ___, resetSeeds, countSeeds] = useSeeds();
   const [toggle, setToggle] = useState<boolean>(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = useRef<HTMLButtonElement>(null);
-  const theme = useTheme();
+  const [isOpen, setSeedsDrawerOpen] = useSetting("drawerOpen", false);
+  const onOpen = () => {
+    setSeedsDrawerOpen(true);
+  };
+  const onClose = () => {
+    setSeedsDrawerOpen(false);
+  };
 
   const styles = useSpring({
     config: {
@@ -83,7 +87,7 @@ const Seeds: FC = () => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader>
-            {seeds.size} {seeds.size === 1 ? "seed" : "seeds"}
+            {seeds.size} {seeds.size === 1 ? "seed" : "seeds"} picked
           </DrawerHeader>
           <DrawerBody>
             <VStack
@@ -105,8 +109,13 @@ const Seeds: FC = () => {
               <Box>
                 <ClearButton closeParent={onClose} />
               </Box>
-              <Button variant="outline" mr={3} onClick={onClose}>
-                Close
+              <Button
+                rightIcon={<ChevronRightIcon />}
+                variant="outline"
+                mr={3}
+                onClick={onClose}
+              >
+                Tune
               </Button>
             </HStack>
           </DrawerFooter>

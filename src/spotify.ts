@@ -12,6 +12,19 @@ const getUrl = (host, path, query = undefined) => {
   return url.toString();
 };
 
+const SCOPES = [
+  "user-modify-playback-state",
+  "playlist-modify-private",
+  "playlist-modify-public",
+  "user-read-currently-playing",
+  "user-top-read",
+  "user-library-read",
+];
+
+type SpotifyError = Error & {
+  code: string;
+};
+
 const fetch = async (
   path,
   { method = "GET", query = undefined, body = undefined } = {}
@@ -122,6 +135,19 @@ export const filterScales: Partial<Record<RecommendFilter, number>> = {
   maxTempo: 200,
 };
 
+export type TopTracksResponse = {
+  items: Track[];
+};
+
+export const top = async (): Promise<TopTracksResponse> =>
+  fetch("/v1/me/top/tracks");
+
+const getScaledValue = (value, scale) => {
+  const val = (value / 100) * (scale || 1);
+  if (val < 1) return val;
+  return Math.floor(val);
+};
+
 export const recommend = async (
   seeds: string[],
   recommendFilters: RecommendFilters
@@ -131,7 +157,7 @@ export const recommend = async (
       ...Object.entries(recommendFilters).reduce(
         (acc, [k, v]) => ({
           ...acc,
-          [snakeCase(k)]: (v / 100) * (filterScales[k] || 1),
+          [snakeCase(k)]: getScaledValue(v, filterScales[k]),
         }),
         {}
       ),
@@ -171,8 +197,7 @@ export const getAuthUrl = () => {
     client_id: "ab13746019ba4117bbb11e4bf1f606f0",
     response_type: "token",
     redirect_uri: `${httpProtocol}//${httpHost}/`,
-    scope:
-      "user-modify-playback-state,playlist-modify-private,playlist-modify-public,user-read-currently-playing",
+    scope: SCOPES.join(","),
   });
   return url;
 };

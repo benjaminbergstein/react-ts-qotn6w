@@ -5,6 +5,7 @@ import {
   currentlyPlaying,
   listPlaylists,
   MyPlaylistsResponse,
+  TopTracksResponse,
   recommend,
   RecommendationsResponse,
   RecommendFilters,
@@ -19,14 +20,23 @@ import {
   cacheStore,
   playlistAdd,
   defaultFilters,
+  top,
 } from "./spotify";
-import { Seeds, SelectFunctionType } from "./types";
+import { QuizQuestion, Seeds, SelectFunctionType } from "./types";
 
 export const useSliders = () =>
   useLocalStorageItem<RecommendFilters>("sliders", defaultFilters);
 
 export const useSetting = (setting, defaultValue = undefined) =>
   useLocalStorageItem(`setting:${setting}`, defaultValue);
+
+export const useQuizSelections = () =>
+  useLocalStorageItem<Partial<Record<QuizQuestion, number>>>(
+    "quizSelections",
+    {}
+  );
+export const useQuizStep = () =>
+  useLocalStorageItem<"quiz" | "generate">("quizStep", "quiz");
 
 export const useView = () => useLocalStorageItem("view", "authorize");
 export const useQ = () => useLocalStorageItem<string>("q", "");
@@ -97,7 +107,7 @@ export const useSeeds = (): [
         }
       }
       setSeedsArr(Array.from(seeds));
-      if (isDesired && view !== "tune") {
+      if (isDesired && view !== "tune" && view !== "quiz") {
         setView("tune");
       }
     };
@@ -128,6 +138,8 @@ export const useMyPlaylists = () => {
 
   return playlistsData?.items;
 };
+
+export const useTopTracks = () => useSWR<TopTracksResponse>("top:tracks", top);
 
 export const useRecommendations = () => {
   const [seeds] = useSeeds();

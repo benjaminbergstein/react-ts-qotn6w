@@ -1,5 +1,5 @@
 import React, { FC, Suspense } from "react";
-import { ErrorBoundary } from 'react-error-boundary'
+import { ErrorBoundary } from "react-error-boundary";
 
 import { Spinner, Box, Flex, Text } from "@chakra-ui/react";
 import { isServer } from "./constants";
@@ -8,6 +8,7 @@ import { Helmet } from "react-helmet";
 import { useView, useCaptureToken, useAuthorization } from "./hooks";
 
 import AuthorizeView from "./AuthorizeView";
+import QuizView from "./QuizView";
 
 const TuneView = React.lazy(() => import("./TuneView"));
 
@@ -18,11 +19,12 @@ import { View } from "./types";
 const ViewMap: Record<View, FC> = {
   authorize: AuthorizeView,
   tune: TuneView,
+  quiz: QuizView,
   logout: LogOut,
 };
 
 const App: FC = () => {
-  const [view] = useView();
+  const [view, setView] = useView();
 
   useAuthorization();
   useCaptureToken();

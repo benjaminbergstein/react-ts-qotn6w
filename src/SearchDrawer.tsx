@@ -40,15 +40,14 @@ const StartView: React.FC<Props> = ({ context = "navbar", closeParent }) => {
   return (
     <>
       {isStart && (
-        <IconButton
+        <Button
           onClick={onOpen}
-          variant="outline"
-          aria-label="Search"
-          my={3}
-          flexShrink={0}
-          p={10}
-          icon={<SearchIcon width="40px" height="40px" />}
-        />
+          width="100%"
+          minHeight="200px"
+          whiteSpace="break-spaces"
+        >
+          Search for a song and then tweak filters
+        </Button>
       )}
       {!isStart && (
         <Button
