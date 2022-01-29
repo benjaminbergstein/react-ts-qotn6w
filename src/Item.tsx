@@ -62,7 +62,7 @@ const Item: React.FC<ItemProps> = ({
         </Box>
       )}
       <Button
-        minWidth={isSeed || isSearch ? undefined : "70vw"}
+        minWidth={isSeed || isSearch ? undefined : ["70vw", "auto"]}
         size={isSeed ? "xs" : "md"}
         onClick={handleClick}
         width="100%"
