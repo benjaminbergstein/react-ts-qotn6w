@@ -13,8 +13,7 @@ import {
   ButtonGroup,
   Input,
   InputGroup,
-  InputRightAddon,
-  InputLeftElement,
+  InputLeftAddon,
   HStack,
   AlertDialog,
   AlertDialogBody,
@@ -175,6 +174,8 @@ const Seeds: FC = () => {
                 flexShrink={0}
                 transform={`translateX(${sendToStep * -100}%)`}
                 transition="transform 0.25s"
+                display="flex"
+                alignItems="center"
               >
                 <ButtonGroup isAttached>
                   <ClearButton isIcon closeParent={onClose} />
@@ -204,6 +205,8 @@ const Seeds: FC = () => {
                 flexShrink={0}
                 transform={`translateX(${sendToStep * -100}%)`}
                 transition="transform 0.25s"
+                display="flex"
+                alignItems="center"
               >
                 <ButtonGroup isAttached width="100%">
                   <Button
@@ -234,8 +237,8 @@ const Seeds: FC = () => {
                 transform={`translateX(${sendToStep * -100}%)`}
                 transition="transform 0.25s"
               >
-                <InputGroup size="xs" variant="outline">
-                  <InputLeftElement
+                <InputGroup size="sm" variant="outline">
+                  <InputLeftAddon
                     as="button"
                     onClick={() => {
                       setPlaylistName(getPlaylistName());
@@ -247,23 +250,29 @@ const Seeds: FC = () => {
                     key={playlistName}
                     defaultValue={playlistName}
                   />
-                  <InputRightAddon
-                    as="button"
-                    onClick={createPlaylistFromSeeds}
-                  >
-                    Create <ChevronRightIcon />
-                  </InputRightAddon>
                 </InputGroup>
-                <Button
-                  onClick={() => {
-                    setSendToStep(0);
-                  }}
-                  variant="unstyled"
+                <ButtonGroup
+                  size="sm"
+                  mt={3}
+                  display="flex"
+                  justifyContent="space-between"
                 >
-                  <Text fontSize="xs" color="gray.600">
+                  <Button
+                    variant="ghost"
+                    onClick={() => {
+                      setSendToStep(0);
+                    }}
+                  >
                     Cancel
-                  </Text>
-                </Button>
+                  </Button>
+                  <Button
+                    iconRight={<ChevronRightIcon />}
+                    onClick={createPlaylistFromSeeds}
+                    colorScheme="pink"
+                  >
+                    Create
+                  </Button>
+                </ButtonGroup>
               </Box>
               <Box
                 width="100%"
