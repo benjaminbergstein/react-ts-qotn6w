@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -8,44 +8,26 @@ import {
   VStack,
   Text,
   Divider,
-  Select,
 } from "@chakra-ui/react";
 
 import { WarningIcon } from "@chakra-ui/icons";
-import { useView, useSetting, usePlaylist, useMyPlaylists } from "./hooks";
+import { useView, useSetting, usePlaylist } from "./hooks";
+import PlaylistsSelect from "./PlaylistsSelect";
 
 const SettingsView: React.FC = () => {
-  const selectRef = React.useRef<HTMLSelectElement>(null);
-  const [view, setView] = useView();
+  const [_view, setView] = useView();
   const [_playlist, setPlaylist] = usePlaylist();
-  const playlists = useMyPlaylists();
   const [wildMode, setWildMode] = useSetting("wildMode", false);
-
-  const handleSelect = () => {
-    const val = selectRef?.current?.value;
-    setPlaylist(val ? JSON.parse(val) : undefined);
-  };
 
   return (
     <VStack spacing={4} alignItems="start">
       <Box>
         <FormLabel htmlFor="add-to">Add to</FormLabel>
-        {playlists && (
-          <Select
-            id="add-to"
-            ref={selectRef}
-            onChange={handleSelect}
-            placeholder="End of queue"
-          >
-            <optgroup label="Add to a playlist:">
-              {playlists.map((playlist) => (
-                <option value={JSON.stringify(playlist)}>
-                  {playlist.name}
-                </option>
-              ))}
-            </optgroup>
-          </Select>
-        )}
+        <PlaylistsSelect
+          onSelect={(playlist) => {
+            setPlaylist(playlist);
+          }}
+        />
         <Box pt={2}>
           <Text textAlign="left" fontSize="xs" color="gray.600">
             Where do you want to add tracks?

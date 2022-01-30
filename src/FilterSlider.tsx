@@ -32,7 +32,6 @@ const FilterSlider: React.FC<{
   const [sliders, setSliders] = useSliders();
   const [isMin, dimension, otherDimension] = getF(filter);
 
-  console.log(sliders);
   const scale = filterScales[filter] || 1;
 
   const handleChange = (val) => {

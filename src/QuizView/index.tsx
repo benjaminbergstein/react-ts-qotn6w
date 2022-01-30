@@ -1,19 +1,11 @@
-import React, { FC, useState } from "react";
-import {
-  Text,
-  Heading,
-  Button,
-  VStack,
-  Flex,
-  ButtonGroup,
-  Divider,
-  Box,
-} from "@chakra-ui/react";
+import React from "react";
+import { Flex } from "@chakra-ui/react";
 
 import Copyright from "../Copyright";
 import { useQuizStep } from "../hooks";
 import Quiz from "./Quiz";
-import Playlist from "./Playlist";
+import PickTopSong from "./PickTopSong";
+import PickPlaylist from "./PickPlaylist";
 
 const QuizView: React.FC = () => {
   const [step] = useQuizStep();
@@ -21,7 +13,8 @@ const QuizView: React.FC = () => {
   return (
     <Flex flex={1} direction="row" align="center" width="100%" justify="center">
       {step === "quiz" && <Quiz />}
-      {step === "generate" && <Playlist />}
+      {step === "generate" && <PickTopSong />}
+      {step === "from-playlist" && <PickPlaylist />}
       <Copyright layout="fixed" />
     </Flex>
   );

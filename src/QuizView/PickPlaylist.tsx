@@ -1,11 +1,13 @@
-import React, { FC, useEffect, useState } from "react";
-import { Box, Heading, Spinner, VStack } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Heading, Spinner, VStack } from "@chakra-ui/react";
 
 import { sentenceCase } from "change-case";
 import {
+  usePlaylistTracks,
   useQuizSelections,
   useQuizStep,
   useRecommendations,
+  useRender,
   useSeeds,
   useSetting,
   useSliders,
@@ -13,8 +15,9 @@ import {
   useView,
 } from "../hooks";
 import Item from "../Item";
-import { RecommendFilters } from "../spotify";
+import { Playlist, RecommendFilters } from "../spotify";
 import Seeds from "../Seeds";
+import PlaylistsSelect from "../PlaylistsSelect";
 
 const map = {
   0: [0, 45],
@@ -22,14 +25,14 @@ const map = {
   2: [55, 100],
 };
 
-const QuizView: React.FC = () => {
-  const [tick, setTick] = useState<number>(+new Date());
-  const render = () => {
-    setTick(+new Date());
-  };
+const PickPlaylist: React.FC = () => {
+  const [playlist, setPlaylist] = useState<Playlist>(undefined);
+  const { data: tracksResponse } = usePlaylistTracks(playlist?.id);
+  const tracks = tracksResponse?.items;
+  const render = useRender();
+  const [_step, setQuizStep] = useQuizStep();
   const [quizSelections] = useQuizSelections();
   const [_sliders, setSliders] = useSliders();
-  const tracks = useTopTracks();
   const { recommendations } = useRecommendations();
   const [seeds, select] = useSeeds();
   const targetSize = [10, 25, 50][quizSelections.size];
@@ -73,16 +76,36 @@ const QuizView: React.FC = () => {
     } catch (e) {
       render();
     }
-  }, [tick, seeds.size, recommendations]);
+  }, [render.tick, seeds.size, recommendations]);
 
   return (
-    <Box>
+    <Box padding={3}>
+      <PlaylistsSelect
+        placeholder="Choose a playlist"
+        label="Your playlists"
+        onSelect={(playlist) => {
+          setPlaylist(playlist);
+        }}
+      />
       {seeds.size !== 0 && <Seeds />}
-      {seeds.size < 1 && (
+      {tracks?.length > 0 && seeds.size < 1 && (
         <VStack spacing="20px" p={3}>
-          <Heading>Pick one of your top tracks to "seed" your playlist</Heading>
-          {tracks?.data?.items.map((item) => (
-            <Item item={item} />
+          <Heading>
+            Pick one of these tracks from your playlist {playlist?.name} to
+            "seed" your playlist
+          </Heading>
+          <Button
+            onClick={() => {
+              setQuizStep("generate");
+            }}
+            variant="outline"
+            size="xs"
+            width="100%"
+          >
+            Start from top songs instead.
+          </Button>
+          {tracks.map(({ track }) => (
+            <Item item={track} />
           ))}
         </VStack>
       )}
@@ -100,4 +123,4 @@ const QuizView: React.FC = () => {
   );
 };
 
-export default QuizView;
+export default PickPlaylist;

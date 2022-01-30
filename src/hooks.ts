@@ -21,6 +21,7 @@ import {
   playlistAdd,
   defaultFilters,
   top,
+  listPlaylistTracks,
 } from "./spotify";
 import { QuizQuestion, Seeds, SelectFunctionType } from "./types";
 
@@ -36,7 +37,10 @@ export const useQuizSelections = () =>
     {}
   );
 export const useQuizStep = () =>
-  useLocalStorageItem<"quiz" | "generate">("quizStep", "quiz");
+  useLocalStorageItem<"quiz" | "from-playlist" | "generate">(
+    "quizStep",
+    "quiz"
+  );
 
 export const useView = () => useLocalStorageItem("view", "authorize");
 export const useQ = () => useLocalStorageItem<string>("q", "");
@@ -74,6 +78,20 @@ const enqueue = (uri: string) => {
   enqueued.add(uri);
 };
 
+export const useRender = () => {
+  const [tick, setTick] = React.useState<number>(+new Date());
+  const render = () => {
+    setTick(+new Date());
+  };
+  render.tick = tick;
+  return render;
+};
+
+export const usePlaylistTracks = (playlistId?: string) =>
+  useSWR<any>(playlistId ? `playlist:${playlistId}` : null, async () =>
+    listPlaylistTracks(playlistId)
+  );
+
 export const useSeeds = (): [
   Seeds,
   SelectFunctionType,
@@ -82,7 +100,6 @@ export const useSeeds = (): [
   () => void,
   number
 ] => {
-  const [playlist] = usePlaylist();
   const [view, setView] = useView();
   const [seedsArr, setSeedsArr] = useLocalStorageItem<string[]>("seeds", []);
 
@@ -100,11 +117,11 @@ export const useSeeds = (): [
       const isDesired = !seeds.has(item.uri);
       isDesired ? seeds.add(item.uri) : seeds.delete(item.uri);
       if (isDesired && item.type === "track") {
-        if (playlist) {
-          playlistAdd(playlist.id, [item.uri]);
-        } else {
-          enqueue(item.uri);
-        }
+        // if (playlist) {
+        //   playlistAdd(playlist.id, [item.uri]);
+        // } else {
+        //   enqueue(item.uri);
+        // }
       }
       setSeedsArr(Array.from(seeds));
       if (isDesired && view !== "tune" && view !== "quiz") {

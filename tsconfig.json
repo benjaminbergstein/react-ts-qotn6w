@@ -4,6 +4,7 @@
     "lib": ["esnext", "dom"],
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "jsx": "react",
     "noEmit": true,
     "target": "es2015"

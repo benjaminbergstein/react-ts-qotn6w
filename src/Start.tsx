@@ -6,7 +6,6 @@ import SearchDrawer from "./SearchDrawer";
 
 import DividerWithWord from "./DividerWithWord";
 import Item from "./Item";
-import SettingsView from "./Settings";
 
 const StartView: React.FC = () => {
   const currentTrack = useCurrentTrack();

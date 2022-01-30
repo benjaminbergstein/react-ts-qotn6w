@@ -1,42 +1,76 @@
 import React, { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import {
-  Divider,
   Box,
   Text,
   VStack,
-  Flex,
   Button,
   Drawer,
   DrawerOverlay,
   DrawerContent,
-  useDisclosure,
   DrawerHeader,
   DrawerFooter,
   DrawerBody,
+  ButtonGroup,
+  Input,
+  InputGroup,
+  InputRightAddon,
+  InputLeftElement,
   HStack,
-  useTheme,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogContent,
+  AlertDialogOverlay,
 } from "@chakra-ui/react";
 
-import { ChevronRightIcon, RepeatIcon } from "@chakra-ui/icons";
-import { cacheGet } from "./spotify";
+import { capitalCase } from "change-case";
+import words from "./words.json";
+import {
+  CheckIcon,
+  ChevronRightIcon,
+  ExternalLinkIcon,
+  RepeatIcon,
+  WarningTwoIcon,
+} from "@chakra-ui/icons";
+import {
+  cacheGet,
+  createPlaylist,
+  addItemsToPlaylist,
+  SpotifyThing,
+  queueAdd,
+} from "./spotify";
 
-import { useSeeds, useSetting } from "./hooks";
+import { useMe, useRender, useSeeds, useSetting } from "./hooks";
 
 import Item from "./Item";
 import { easings, animated, useSpring } from "react-spring";
 import ClearButton from "./ClearButton";
 
+const randomWord = () => {
+  const n = Math.floor(Math.random() * words.length);
+  return capitalCase(words[n % words.length]);
+};
+
+const getPlaylistName = () => randomWord() + " " + randomWord();
+
 const Seeds: FC = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [seeds, _, __, ___, resetSeeds, countSeeds] = useSeeds();
+  const { data: me } = useMe();
   const [toggle, setToggle] = useState<boolean>(false);
+  const [sendToStep, setSendToStep] = useState<number>(0);
   const [isOpen, setSeedsDrawerOpen] = useSetting("drawerOpen", false);
+  const [error, setError] = useState<string | undefined>(undefined);
   const onOpen = () => {
     setSeedsDrawerOpen(true);
   };
+  const cancelRef = useRef();
   const onClose = () => {
     setSeedsDrawerOpen(false);
   };
 
+  const [playlistName, setPlaylistName] = useState<string>(getPlaylistName());
   const styles = useSpring({
     config: {
       clamp: true,
@@ -54,6 +88,29 @@ const Seeds: FC = () => {
       ? "0px 0px 5px 0 rgb(0 0 0 / 15%)"
       : "0px 0px 0px 0px transparent",
   });
+  const createPlaylistFromSeeds = async () => {
+    const userPlaylistName = inputRef.current.value;
+    const res = await createPlaylist(me?.id, userPlaylistName);
+    await addItemsToPlaylist(res?.id, Array.from(seeds).join(","));
+    setSendToStep(3);
+    setTimeout(() => {
+      setSendToStep(0);
+    }, 3000);
+  };
+
+  const addToQueue = async () => {
+    try {
+      await Promise.all(Array.from(seeds).map((uri) => queueAdd(uri)));
+      setSendToStep(0);
+      setTimeout(() => {
+        setSendToStep(0);
+      }, 3000);
+    } catch (e) {
+      setError(
+        "You currently do not have an active player. Start playing mustic to add to queue."
+      );
+    }
+  };
 
   useEffect(() => {
     setToggle(true);
@@ -105,22 +162,153 @@ const Seeds: FC = () => {
             </VStack>
           </DrawerBody>
           <DrawerFooter>
-            <HStack spacing="10px" width="100%" justifyContent="space-between">
-              <Box>
-                <ClearButton closeParent={onClose} />
-              </Box>
-              <Button
-                rightIcon={<ChevronRightIcon />}
-                variant="outline"
-                mr={3}
-                onClick={onClose}
+            <Box display="flex" overflow="hidden">
+              <Box
+                width="100%"
+                flexShrink={0}
+                transform={`translateX(${sendToStep * -100}%)`}
+                transition="transform 0.25s"
               >
-                Tune
-              </Button>
-            </HStack>
+                <ButtonGroup isAttached>
+                  <ClearButton isIcon closeParent={onClose} />
+                  <Button
+                    size="sm"
+                    rightIcon={<ExternalLinkIcon />}
+                    variant="outline"
+                    colorScheme="pink"
+                    onClick={() => {
+                      setSendToStep(1);
+                    }}
+                  >
+                    Send to
+                  </Button>
+                  <Button
+                    size="sm"
+                    rightIcon={<ChevronRightIcon />}
+                    variant="outline"
+                    onClick={onClose}
+                  >
+                    Tune
+                  </Button>
+                </ButtonGroup>
+              </Box>
+              <Box
+                width="100%"
+                flexShrink={0}
+                transform={`translateX(${sendToStep * -100}%)`}
+                transition="transform 0.25s"
+              >
+                <ButtonGroup isAttached width="100%">
+                  <Button
+                    flex={1}
+                    size="sm"
+                    variant="solid"
+                    colorScheme="pink"
+                    onClick={() => {
+                      setSendToStep(2);
+                    }}
+                  >
+                    Playlist
+                  </Button>
+                  <Button
+                    flex={1}
+                    size="sm"
+                    variant="outline"
+                    onClick={addToQueue}
+                    colorScheme="pink"
+                  >
+                    Queue
+                  </Button>
+                </ButtonGroup>
+              </Box>
+              <Box
+                width="100%"
+                flexShrink={0}
+                transform={`translateX(${sendToStep * -100}%)`}
+                transition="transform 0.25s"
+              >
+                <InputGroup size="xs" variant="outline">
+                  <InputLeftElement
+                    as="button"
+                    onClick={() => {
+                      setPlaylistName(getPlaylistName());
+                    }}
+                    children={<RepeatIcon />}
+                  />
+                  <Input
+                    ref={inputRef}
+                    key={playlistName}
+                    defaultValue={playlistName}
+                  />
+                  <InputRightAddon
+                    as="button"
+                    onClick={createPlaylistFromSeeds}
+                  >
+                    Create <ChevronRightIcon />
+                  </InputRightAddon>
+                </InputGroup>
+                <Button
+                  onClick={() => {
+                    setSendToStep(0);
+                  }}
+                  variant="unstyled"
+                >
+                  <Text fontSize="xs" color="gray.600">
+                    Cancel
+                  </Text>
+                </Button>
+              </Box>
+              <Box
+                width="100%"
+                flexShrink={0}
+                transform={`translateX(${sendToStep * -100}%)`}
+                transition="transform 0.25s"
+              >
+                <HStack spacing="20px">
+                  <CheckIcon color="green.500" />
+                  <Box>Playlist created!</Box>
+                </HStack>
+              </Box>
+            </Box>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      <AlertDialog
+        leastDestructiveRef={cancelRef}
+        isOpen={!!error}
+        onClose={() => {
+          setError(undefined);
+        }}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+            >
+              <Box py={5}>
+                <WarningTwoIcon width="75px" height="75px" color="orange.400" />
+              </Box>
+              <Box>Something went wrong</Box>
+            </AlertDialogHeader>
+
+            <AlertDialogBody>{error}</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                onClick={() => {
+                  setError(undefined);
+                }}
+              >
+                Okay
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };

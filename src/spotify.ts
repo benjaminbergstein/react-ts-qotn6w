@@ -25,6 +25,11 @@ type SpotifyError = Error & {
   code: string;
 };
 
+const CODES = {
+  401: "not_authorized",
+  404: "not_found",
+};
+
 const fetch = async (
   path,
   { method = "GET", query = undefined, body = undefined } = {}
@@ -38,8 +43,9 @@ const fetch = async (
     },
     ...(body && { body: JSON.stringify(body) }),
   }).then((res) => {
-    if (res.status !== 200) {
-      const error = new Error("not_authorized");
+    if (res.status > 399) {
+      const error = new Error(CODES[res.status.toString()]);
+      throw error;
     }
     return res.json();
   });
@@ -65,7 +71,9 @@ export type Track = SpotifyThing & {
   album: Album;
 };
 
-export type Playlist = SpotifyThing;
+export type Playlist = SpotifyThing & {
+  tracks: Track[];
+};
 
 export type SearchResponse = {
   tracks: {
@@ -82,6 +90,23 @@ export const cacheGet = (uri) => fetchStorageItem(`spotifyCache:${uri}`);
 export const search = async (q, type = "track"): Promise<SearchResponse> =>
   fetch("/v1/search", {
     query: { q, type },
+  });
+
+export const createPlaylist = async (userId, playlistName): Promise<Playlist> =>
+  fetch(`/v1/users/${userId}/playlists`, {
+    method: "POST",
+    body: { name: playlistName, public: true },
+  });
+
+export const addItemsToPlaylist = async (
+  playlistId: string,
+  uris: string
+): Promise<unknown> =>
+  fetch(`/v1/playlists/${playlistId}/tracks`, {
+    method: "POST",
+    query: {
+      uris,
+    },
   });
 
 export type RecommendationsResponse = {
@@ -185,6 +210,13 @@ export const listPlaylists = async (
   limit: number = 50
 ): Promise<MyPlaylistsResponse> =>
   fetch("/v1/me/playlists", { query: { limit } });
+
+type PlaylistTracksResponse = any;
+
+export const listPlaylistTracks = async (
+  playlistId: string
+): Promise<PlaylistTracksResponse> =>
+  fetch(`/v1/playlists/${playlistId}/tracks`);
 
 export const playlistAdd = async (playlistId: string, uris: string[]) =>
   fetch(`/v1/playlists/${playlistId}/tracks`, {
