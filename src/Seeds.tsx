@@ -128,8 +128,15 @@ const Seeds: FC = () => {
         left="0px"
         zIndex={1}
       >
-        <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>
-          Recommendation "Seeds"
+        <Text
+          color="gray.900"
+          fontSize="xs"
+          fontWeight={900}
+          py={2}
+          textColor="pink.500"
+          textShadow="1px 1px 0 var(--chakra-colors-pink-100), 1px 2px 0 var(--chakra-colors-pink-500)"
+        >
+          Your playlist
         </Text>
         <Button
           as={animated.div}
@@ -137,14 +144,14 @@ const Seeds: FC = () => {
           width="100%"
           style={styles as unknown as CSSProperties}
         >
-          {seeds.size} {seeds.size === 1 ? "seed" : "seeds"}
+          {seeds.size} {seeds.size === 1 ? "track" : "tracks"}
         </Button>
       </Box>
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader>
-            {seeds.size} {seeds.size === 1 ? "seed" : "seeds"} picked
+            {seeds.size} {seeds.size === 1 ? "track" : "tracks"} picked
           </DrawerHeader>
           <DrawerBody>
             <VStack

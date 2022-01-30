@@ -70,10 +70,14 @@ const Navbar: FC = () => {
                 <Settings />
               </Drawer>
 
-              <Drawer toggle={<QuestionIcon />} title="Help">
-                <Help />
-              </Drawer>
-              <ClearButton closeParent={onClose} />
+              {false && (
+                <>
+                  <Drawer toggle={<QuestionIcon />} title="Help">
+                    <Help />
+                  </Drawer>
+                  <ClearButton closeParent={onClose} />
+                </>
+              )}
             </VStack>
           </DrawerBody>
 

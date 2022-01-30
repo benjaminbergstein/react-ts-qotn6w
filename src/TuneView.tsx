@@ -50,7 +50,13 @@ const TuneView: FC = () => {
       {anySeeds && <Seeds />}
       {anySeeds && (
         <VStack alignItems="start" p={3}>
-          <Text color="gray.900" fontSize="xs" fontWeight={900} py={2}>
+          <Text
+            fontSize="xs"
+            fontWeight={900}
+            py={2}
+            textColor="pink.500"
+            textShadow="1px 1px 0 var(--chakra-colors-pink-100), 1px 2px 0 var(--chakra-colors-pink-500)"
+          >
             Recommendations
           </Text>
           {isValidating && (
