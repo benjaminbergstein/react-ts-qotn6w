@@ -27,21 +27,22 @@ const AuthorizeView: React.FC = () => {
       width="100%"
       justify="center"
     >
-      <VStack spacing="30px" align="right" maxWidth="600px">
+      <VStack spacing="50px" align="center" maxWidth="350px">
         <Logo width="300px" height="72px" />
 
-        <Heading color="gray.800" size="lg">
-          Meander through new music
+        <Heading
+          color="gray.800"
+          size="md"
+          textAlign="center"
+          lineHeight="150%"
+        >
+          The fastest way to discover dozens of tunes you'll{" "}
+          <span title="love" aria-label="love">
+            💓
+          </span>
         </Heading>
-        <Heading color="gray.600" size="md">
-          Add spontaneity to your queue and playlists.
-        </Heading>
-        <Text color="gray.800" fontSize="sm">
-          Zero in on what you're looking for by tweaking dimensions such as
-          energy / danceability / popularity).
-        </Text>
         <a href={getAuthUrl()}>
-          <Button rightIcon={<ExternalLinkIcon />} colorScheme="pink">
+          <Button size="lg" rightIcon={<ExternalLinkIcon />} colorScheme="pink">
             Connect Spotify
           </Button>
         </a>
