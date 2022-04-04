@@ -1,16 +1,16 @@
 {
   "compilerOptions": {
     "module": "commonjs",
-    "lib": ["esnext", "dom"],
+    "lib": ["esnext", "webworker"],
+    "outDir": "../public",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "types": ["node"],
     "jsx": "react",
-    "noEmit": true,
+    "noEmit": false,
     "allowJs": true,
     "target": "es2015"
   },
-  "include": ["src/**/*"],
-  "exclude": ["service-worker/**/*"]
+  "include": ["./**/*.ts"]
 }

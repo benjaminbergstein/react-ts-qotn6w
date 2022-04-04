@@ -1,0 +1,21 @@
+overwrite: true
+schema: "./server/schema.ts"
+documents: "src/**/*.graphql"
+generates:
+  src/generated/graphql.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
+  # ./server/generated/:
+  #   preset: graphql-modules
+  #   presetConfig:
+  #     baseTypesPath: ./graphql.ts # Where to create the complete schema types
+  #     filename: ./module-types.ts # Where to create each module types
+  #   plugins:
+  #     - add:
+  #         content: "/* eslint-disable */"
+  #     - typescript
+  #     - typescript-resolvers

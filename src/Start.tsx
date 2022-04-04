@@ -27,16 +27,11 @@ const StartView: React.FC = () => {
         </Text>
       </Box>
       <Box width="100%">
-        <Button
-          onClick={() => {
-            setView("quiz");
-          }}
-          width="100%"
-          minHeight="200px"
-          whiteSpace="break-spaces"
-        >
-          Answer a few questions to generate a playlist.
-        </Button>
+        <a href="/v1/quiz">
+          <Button width="100%" minHeight="200px" whiteSpace="break-spaces">
+            Answer a few questions to generate a playlist.
+          </Button>
+        </a>
       </Box>
       <Box width="100%">
         <SearchDrawer context="start" closeParent={() => {}} />

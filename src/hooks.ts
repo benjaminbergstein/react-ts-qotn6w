@@ -23,7 +23,8 @@ import {
   top,
   listPlaylistTracks,
 } from "./spotify";
-import { QuizQuestion, Seeds, SelectFunctionType } from "./types";
+import { QuizQuestion, Seeds, SelectFunctionType, View } from "./types";
+import { isServer } from "./constants";
 
 export const useSliders = () =>
   useLocalStorageItem<RecommendFilters>("sliders", defaultFilters);
@@ -42,7 +43,27 @@ export const useQuizStep = () =>
     "quiz"
   );
 
-export const useView = () => useLocalStorageItem("view", "authorize");
+export const useRouter = (serverView: View = undefined) => {
+  if (isServer) return { view: serverView || "authorize" };
+  const [_, __, view, ...args] = document.location.pathname.split("/");
+  return {
+    view,
+    args,
+  };
+};
+
+export const useView = (
+  serverView: View = undefined
+): [View, React.Dispatch<React.SetStateAction<View>>] => {
+  const { view } = useRouter(serverView);
+  const [_, setViewState] = React.useState(view);
+  const setView = (newView: View) => {
+    history.pushState({}, "yes", `/v/${newView}`);
+    setViewState(newView);
+  };
+  if (isServer) return [serverView as View, () => {}];
+  return [view as View, setView];
+};
 export const useQ = () => useLocalStorageItem<string>("q", "");
 
 export const useSearch = () => {
@@ -136,13 +157,12 @@ export const useToken = () =>
   useLocalStorageItem<string | undefined>("token", undefined);
 
 export const useCaptureToken = () => {
-  const [token, setToken] = useToken();
-  const [view, setView] = useView();
+  const [_token, setToken] = useToken();
+  const [_view, setView] = useView();
   React.useEffect(() => {
     if (/#access_token/.test(document.location.hash)) {
-      setView("tune");
       setToken(getTokenFromUrl());
-      document.location.hash = "";
+      setView("tune");
     }
   }, []);
 };

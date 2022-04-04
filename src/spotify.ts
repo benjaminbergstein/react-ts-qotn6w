@@ -1,10 +1,20 @@
 import unfetch from "unfetch";
+import graphql from "./graphql";
+import { loader } from "graphql.macro";
+
 import { snakeCase } from "snake-case";
 import { httpProtocol, httpHost } from "./constants";
 import {
   fetch as fetchStorageItem,
   store as storeStorageItem,
 } from "./storage";
+import {
+  ObjectType,
+  PutObjectMutation,
+  PutObjectMutationVariables,
+} from "./generated/graphql";
+
+const PutObjectQuery = loader("./PutObject.graphql");
 
 const getUrl = (host, path, query = undefined) => {
   const url = new URL(`https://${host}${path}`);
@@ -81,8 +91,19 @@ export type SearchResponse = {
   };
 };
 
-export const cacheStore = (item) => {
+export const cacheStore = async (item) => {
+  console.log("Store!!");
   storeStorageItem(`spotifyCache:${item.uri}`, item);
+  if (item.type === "track") {
+    await graphql<PutObjectMutation, PutObjectMutationVariables>({
+      query: PutObjectQuery,
+      variables: {
+        id: item.uri,
+        type: ObjectType.SpotifyTrack,
+        data: JSON.stringify(item),
+      },
+    });
+  }
 };
 
 export const cacheGet = (uri) => fetchStorageItem(`spotifyCache:${uri}`);
@@ -91,6 +112,9 @@ export const search = async (q, type = "track"): Promise<SearchResponse> =>
   fetch("/v1/search", {
     query: { q, type },
   });
+
+export const getPlaylist = async (playlistId): Promise<Playlist> =>
+  fetch(`/v1/playlists/${playlistId}`);
 
 export const createPlaylist = async (userId, playlistName): Promise<Playlist> =>
   fetch(`/v1/users/${userId}/playlists`, {
