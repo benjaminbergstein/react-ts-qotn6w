@@ -12,8 +12,10 @@ import { useView, useCaptureToken, useAuthorization, useRouter } from "./hooks";
 import AuthorizeView from "./AuthorizeView";
 import QuizView from "./QuizView";
 
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/service-worker.js");
+if (!isServer) {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js");
+  }
 }
 
 const TuneView = React.lazy(() => import("./TuneView"));
@@ -40,7 +42,9 @@ const foo = async () => {
   await fetch("/foobar");
 };
 
-foo();
+if (!isServer) {
+  foo();
+}
 
 const closestAnchor = (element) => {
   if (element.tagName === "A") return element;
