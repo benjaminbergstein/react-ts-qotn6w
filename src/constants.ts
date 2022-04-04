@@ -25,7 +25,10 @@ export const httpProtocol = isomorphicConstant(
 
 export const apiHost = initialData(
   "apiHost",
-  () =>
-    gitBranch ? `${gitBranch}.react-ts-qotn6w.pages.dev` : "localhost:8788",
+  () => {
+    if (process.env.API_HOST) return process.env.API_HOST;
+    if (gitBranch) return `${gitBranch}.react-ts-qotn6w.pages.dev`;
+    return "localhost:8788";
+  },
   () => "localhost:8788"
 );
