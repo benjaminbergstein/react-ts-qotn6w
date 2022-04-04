@@ -1,0 +1,8 @@
+query GetPlaylist($id: ID!) {
+  getPlaylist(playlistId: $id) {
+    id
+    title
+    spotifyPlaylistId
+    tracks
+  }
+}

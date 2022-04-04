@@ -1,0 +1,7 @@
+mutation PutObject($id: ID, $type: ObjectType!, $data: String!) {
+  putObject(input: { id: $id, type: $type, data: $data }) {
+    id
+    type
+    data
+  }
+}

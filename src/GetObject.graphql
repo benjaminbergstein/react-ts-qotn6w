@@ -1,0 +1,7 @@
+query GetObject($id: ID!, $type: ObjectType!) {
+  getObject(id: $id, type: $type) {
+    id
+    type
+    data
+  }
+}

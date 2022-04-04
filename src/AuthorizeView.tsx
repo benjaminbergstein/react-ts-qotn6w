@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { Heading, Text, Button, VStack, Flex } from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ChevronRightIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { getAuthUrl } from "./spotify";
 import Logo from "./Logo";
 import Copyright from "./Copyright";
@@ -10,13 +10,7 @@ import { useEffect } from "react";
 const AuthorizeView: React.FC = () => {
   const me = useMe();
   const [_view, setView] = useView();
-
-  useEffect(() => {
-    if (me?.data?.id) {
-      console.log("Asdfa", _view);
-      setView("tune");
-    }
-  }, [me?.data?.id]);
+  const isAuthorized = !!me?.data?.id;
 
   return (
     <Flex
@@ -41,11 +35,28 @@ const AuthorizeView: React.FC = () => {
             💓
           </span>
         </Heading>
-        <a href={getAuthUrl()}>
-          <Button size="lg" rightIcon={<ExternalLinkIcon />} colorScheme="pink">
-            Connect Spotify
-          </Button>
-        </a>
+        {!isAuthorized && (
+          <a data-preload="false" href={getAuthUrl()}>
+            <Button
+              size="lg"
+              rightIcon={<ExternalLinkIcon />}
+              colorScheme="pink"
+            >
+              Connect Spotify
+            </Button>
+          </a>
+        )}
+        {isAuthorized && (
+          <a href="/v/tune">
+            <Button
+              size="lg"
+              rightIcon={<ChevronRightIcon />}
+              colorScheme="pink"
+            >
+              Go to tuner
+            </Button>
+          </a>
+        )}
       </VStack>
       <Copyright layout="fixed" />
     </Flex>

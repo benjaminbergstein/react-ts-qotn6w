@@ -1,4 +1,6 @@
 import React, { CSSProperties, FC, useEffect, useRef, useState } from "react";
+import { loader } from "graphql.macro";
+import graphql from "./graphql";
 import {
   Box,
   Text,
@@ -45,11 +47,18 @@ import { useMe, useRender, useSeeds, useSetting } from "./hooks";
 import Item from "./Item";
 import { easings, animated, useSpring } from "react-spring";
 import ClearButton from "./ClearButton";
+import {
+  CreatePlaylistInput,
+  CreatePlaylistMutation,
+  CreatePlaylistMutationVariables,
+} from "./generated/graphql";
 
 const randomWord = () => {
   const n = Math.floor(Math.random() * words.length);
   return capitalCase(words[n % words.length]);
 };
+
+const CreatePlaylist = loader("./CreatePlaylist.graphql");
 
 const getPlaylistName = () => randomWord() + " " + randomWord();
 
@@ -87,10 +96,19 @@ const Seeds: FC = () => {
       ? "0px 0px 5px 0 rgb(0 0 0 / 15%)"
       : "0px 0px 0px 0px transparent",
   });
+
   const createPlaylistFromSeeds = async () => {
     const userPlaylistName = inputRef.current.value;
     const res = await createPlaylist(me?.id, userPlaylistName);
     await addItemsToPlaylist(res?.id, Array.from(seeds).join(","));
+    await graphql<CreatePlaylistMutation, CreatePlaylistMutationVariables>({
+      query: CreatePlaylist,
+      variables: {
+        title: userPlaylistName,
+        spotifyPlaylistId: res?.id,
+        tracks: Array.from(seeds),
+      },
+    });
     setSendToStep(3);
     setTimeout(() => {
       setSendToStep(0);

@@ -3,7 +3,7 @@ import { SpotifyThing } from "./spotify";
 
 export type Seeds = Set<string>;
 
-export type View = "authorize" | "tune" | "logout" | "quiz";
+export type View = "authorize" | "tune" | "logout" | "quiz" | "playlist";
 
 export type SelectFunctionType = (
   item: SpotifyThing

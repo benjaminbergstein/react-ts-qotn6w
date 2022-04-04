@@ -1,0 +1,18 @@
+mutation CreatePlaylist(
+  $title: String!
+  $spotifyPlaylistId: ID!
+  $tracks: [ID!]!
+) {
+  createPlaylist(
+    input: {
+      title: $title
+      spotifyPlaylistId: $spotifyPlaylistId
+      tracks: $tracks
+    }
+  ) {
+    id
+    title
+    spotifyPlaylistId
+    tracks
+  }
+}

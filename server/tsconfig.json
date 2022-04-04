@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "lib": ["esnext", "webworker"],
+    "outDir": "../functions",
+    "moduleResolution": "node",
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "sourceRoot": ".",
+    "types": ["@cloudflare/workers-types", "node"],
+    "typeRoots": ["node_modules/@types"],
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "sourceMap": true
+  },
+  "include": ["global.d.ts", "schema.graphql", "graphql.ts", "playlist.ts"]
+}

@@ -1,16 +1,24 @@
-import React, { FC, Suspense } from "react";
+import React, { FC, Suspense, useEffect, useState } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { Spinner, Box, Flex, Text } from "@chakra-ui/react";
+import InitialData from "./InitialData";
+
+import { Spinner, Flex } from "@chakra-ui/react";
 import { isServer } from "./constants";
 
 import { Helmet } from "react-helmet";
-import { useView, useCaptureToken, useAuthorization } from "./hooks";
+import { useView, useCaptureToken, useAuthorization, useRouter } from "./hooks";
 
 import AuthorizeView from "./AuthorizeView";
 import QuizView from "./QuizView";
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js");
+}
+
 const TuneView = React.lazy(() => import("./TuneView"));
+// const PlaylistView = React.lazy(() => import("./PlaylistView"));
+import PlaylistView from "./PlaylistView";
 
 import LogOut from "./LogOut";
 
@@ -20,11 +28,48 @@ const ViewMap: Record<View, FC> = {
   authorize: AuthorizeView,
   tune: TuneView,
   quiz: QuizView,
+  playlist: PlaylistView,
   logout: LogOut,
 };
 
-const App: FC = () => {
-  const [view, setView] = useView();
+type AppProps = {
+  staticProps?: any;
+};
+
+const foo = async () => {
+  await fetch("/foobar");
+};
+
+foo();
+
+const closestAnchor = (element) => {
+  if (element.tagName === "A") return element;
+  if (!element.parentNode) return false;
+  return closestAnchor(element.parentNode);
+};
+const App: FC<AppProps> = ({ staticProps = undefined }) => {
+  const [view] = useView(staticProps?.view as View);
+  const [tick, setTick] = useState<number>(+new Date());
+
+  const render = () => setTick(+new Date());
+
+  useEffect(() => {
+    const listener = async (e: MouseEvent) => {
+      const target = e.target as HTMLAnchorElement;
+      const link = closestAnchor(target);
+      if (!link) return;
+      const href = link.href;
+      if (link.dataset.preload === "false") return;
+      if (!href) return;
+      e.preventDefault();
+      history.pushState({}, "yes", "/" + href.split("/").slice(3).join("/"));
+      render();
+    };
+    document.addEventListener("click", listener, false);
+    return () => {
+      document.removeEventListener("click", listener, false);
+    };
+  }, []);
 
   useAuthorization();
   useCaptureToken();
@@ -53,6 +98,7 @@ const App: FC = () => {
         )}
         {isServer && <CurrentView />}
       </Flex>
+      <InitialData />
     </>
   );
 };
