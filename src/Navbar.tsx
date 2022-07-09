@@ -27,6 +27,7 @@ import Settings from "./Settings";
 import SearchDrawer from "./SearchDrawer";
 import Help from "./Help";
 import Drawer from "./Drawer";
+import Playlists from "./Playlists";
 import ClearButton from "./ClearButton";
 
 const Navbar: FC = () => {
@@ -65,6 +66,7 @@ const Navbar: FC = () => {
               <SearchDrawer closeParent={onClose} />
 
               <Filters />
+              <Playlists />
 
               <Drawer toggle={<SettingsIcon />} title="Settings">
                 <Settings />

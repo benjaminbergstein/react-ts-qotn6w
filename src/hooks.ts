@@ -23,8 +23,27 @@ import {
   top,
   listPlaylistTracks,
 } from "./spotify";
-import { QuizQuestion, Seeds, SelectFunctionType, View } from "./types";
+import {
+  QuizQuestion,
+  Seeds,
+  SelectFunctionType,
+  View,
+  ManagedPlaylist,
+  QuizAnswer,
+} from "./types";
 import { isServer } from "./constants";
+
+export const useManagedPlaylists = () =>
+  useLocalStorageItem<Record<string, ManagedPlaylist>>("managedPlaylists", {});
+
+export const useCurrentManagedPlaylist = () => {
+  const [id, setId] = useLocalStorageItem<string>(
+    "currentManagedPlaylistId",
+    undefined
+  );
+  const [managedPlaylists] = useManagedPlaylists();
+  return [id ? managedPlaylists[id] : undefined, setId];
+};
 
 export const useSliders = () =>
   useLocalStorageItem<RecommendFilters>("sliders", defaultFilters);
@@ -33,7 +52,7 @@ export const useSetting = (setting, defaultValue = undefined) =>
   useLocalStorageItem(`setting:${setting}`, defaultValue);
 
 export const useQuizSelections = () =>
-  useLocalStorageItem<Partial<Record<QuizQuestion, number>>>(
+  useLocalStorageItem<Partial<Record<QuizQuestion, QuizAnswer>>>(
     "quizSelections",
     {}
   );
@@ -52,17 +71,15 @@ export const useRouter = (serverView: View = undefined) => {
   };
 };
 
-export const useView = (
-  serverView: View = undefined
-): [View, React.Dispatch<React.SetStateAction<View>>] => {
+export const useView = (serverView: View = undefined) => {
   const { view } = useRouter(serverView);
   const [_, setViewState] = React.useState(view);
-  const setView = (newView: View) => {
-    history.pushState({}, "yes", `/v/${newView}`);
+  const setView = (newView: View, subpath: string = "") => {
+    history.pushState({}, "yes", `/v/${newView}${subpath}`);
     setViewState(newView);
   };
-  if (isServer) return [serverView as View, () => {}];
-  return [view as View, setView];
+  if (isServer) return [serverView, setView] as [View, typeof setView];
+  return [view, setView] as [View, typeof setView];
 };
 export const useQ = () => useLocalStorageItem<string>("q", "");
 
@@ -178,10 +195,11 @@ export const useMyPlaylists = () => {
 
 export const useTopTracks = () => useSWR<TopTracksResponse>("top:tracks", top);
 
-export const useRecommendations = () => {
-  const [seeds] = useSeeds();
+export const useRecommendations = (overrideSeeds: Set<string> = undefined) => {
+  const [tunerSeeds] = useSeeds();
   const [sliders] = useSliders();
   const [wildMode] = useSetting("wildMode", false);
+  const seeds = overrideSeeds || tunerSeeds;
 
   const trueSeeds = new Array(seeds.size > 5 ? 5 : seeds.size)
     .fill("")

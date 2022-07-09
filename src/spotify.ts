@@ -82,7 +82,9 @@ export type Track = SpotifyThing & {
 };
 
 export type Playlist = SpotifyThing & {
-  tracks: Track[];
+  tracks: {
+    items: { track: Track }[];
+  };
 };
 
 export type SearchResponse = {
@@ -93,16 +95,23 @@ export type SearchResponse = {
 
 export const cacheStore = async (item) => {
   console.log("Store!!");
-  storeStorageItem(`spotifyCache:${item.uri}`, item);
-  if (item.type === "track") {
-    await graphql<PutObjectMutation, PutObjectMutationVariables>({
-      query: PutObjectQuery,
-      variables: {
-        id: item.uri,
-        type: ObjectType.SpotifyTrack,
-        data: JSON.stringify(item),
-      },
-    });
+  try {
+    storeStorageItem(`spotifyCache:${item.uri}`, item);
+    if (item.type === "track") {
+      await graphql<PutObjectMutation, PutObjectMutationVariables>({
+        query: PutObjectQuery,
+        variables: {
+          id: item.uri,
+          type: ObjectType.SpotifyTrack,
+          data: JSON.stringify(item),
+        },
+      });
+    }
+  } catch (e: unknown) {
+    console.error(
+      `An error occurred storing "spotifyCache:${item.uri}" to cache:`,
+      e
+    );
   }
 };
 

@@ -11,6 +11,7 @@ import { useView, useCaptureToken, useAuthorization, useRouter } from "./hooks";
 
 import AuthorizeView from "./AuthorizeView";
 import QuizView from "./QuizView";
+import ManagePlaylistView from "./ManagePlaylistView";
 
 if (!isServer) {
   if ("serviceWorker" in navigator) {
@@ -31,6 +32,7 @@ const ViewMap: Record<View, FC> = {
   tune: TuneView,
   quiz: QuizView,
   playlist: PlaylistView,
+  managePlaylist: ManagePlaylistView,
   logout: LogOut,
 };
 

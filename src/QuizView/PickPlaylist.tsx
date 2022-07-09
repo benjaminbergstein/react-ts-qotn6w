@@ -20,10 +20,10 @@ import Seeds from "../Seeds";
 import PlaylistsSelect from "../PlaylistsSelect";
 
 const map = {
-  0: [0, 45],
-  1: [25, 75],
-  2: [55, 100],
+  low: [0, 65],
+  high: [75, 100],
 };
+console.log(map);
 
 const PickPlaylist: React.FC = () => {
   const [playlist, setPlaylist] = useState<Playlist>(undefined);
