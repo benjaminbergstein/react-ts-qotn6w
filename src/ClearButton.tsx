@@ -17,9 +17,16 @@ import { useQuizSelections, useQuizStep, useSeeds, useSliders } from "./hooks";
 type Props = {
   closeParent: () => void;
   isIcon?: boolean;
+  confirm?: boolean;
+  icon?: boolean;
 };
 
-const ClearButton: FC<Props> = ({ isIcon = false, closeParent }) => {
+const ClearButton: FC<Props> = ({
+  isIcon = false,
+  closeParent,
+  confirm = true,
+  icon = true,
+}) => {
   const [_, __, ___, ____, resetSeeds] = useSeeds();
   const [_sliders, _setSliders, resetSliders] = useSliders();
   const [_quizSelections, _setQuizSelections, resetQuizSelections] =
@@ -46,7 +53,11 @@ const ClearButton: FC<Props> = ({ isIcon = false, closeParent }) => {
           size="sm"
           icon={<DeleteIcon />}
           onClick={() => {
-            setIsOpen(true);
+            if (confirm) {
+              setIsOpen(true);
+            } else {
+              onClear();
+            }
           }}
           aria-label="Reset"
           variant="outline"
@@ -54,16 +65,20 @@ const ClearButton: FC<Props> = ({ isIcon = false, closeParent }) => {
       )}
       {!isIcon && (
         <Button
-          leftIcon={<DeleteIcon />}
+          leftIcon={icon ? <DeleteIcon /> : undefined}
           onClick={() => {
-            setIsOpen(true);
+            if (confirm) {
+              setIsOpen(true);
+            } else {
+              onClear();
+            }
           }}
-          width="100%"
+          size="sm"
           colorScheme="red"
           variant="outline"
           mr={3}
         >
-          Clear
+          Start over
         </Button>
       )}
       <AlertDialog

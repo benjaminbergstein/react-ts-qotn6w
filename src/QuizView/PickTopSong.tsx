@@ -1,5 +1,12 @@
 import React, { FC, useEffect, useState } from "react";
-import { Box, Button, Heading, Spinner, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Heading,
+  HStack,
+  Spinner,
+  VStack,
+} from "@chakra-ui/react";
 
 import { sentenceCase } from "change-case";
 import {
@@ -15,13 +22,9 @@ import {
 } from "../hooks";
 import Item from "../Item";
 import { RecommendFilters } from "../spotify";
-import Seeds from "../Seeds";
-
-const map = {
-  0: [0, 45],
-  1: [25, 75],
-  2: [55, 100],
-};
+import Seeds from "../SeedsV2";
+import { answerMap } from "./questions";
+import ClearButton from "../ClearButton";
 
 const Playlist: React.FC = () => {
   const [_step, setQuizStep] = useQuizStep();
@@ -31,21 +34,21 @@ const Playlist: React.FC = () => {
   const tracks = useTopTracks();
   const { recommendations } = useRecommendations();
   const [seeds, select] = useSeeds();
-  const targetSize = [10, 25, 50][quizSelections.size];
+  const targetSize = 10;
   const [_view, setView] = useView();
   const [_seedsDrawerOpen, setSeedsDrawerOpen] = useSetting(
     "drawerOpen",
     false
   );
 
+  const tooFewRecommendations = recommendations?.tracks?.length < 10;
   useEffect(() => {
     const slidersFromSelections = Object.entries(quizSelections).reduce(
       (acc, [slug, answer]) => {
-        if (slug === "size") return acc;
         return {
           ...acc,
-          [`min${sentenceCase(slug)}`]: map[answer][0],
-          [`max${sentenceCase(slug)}`]: map[answer][1],
+          [`min${sentenceCase(slug)}`]: answerMap[answer][0],
+          [`max${sentenceCase(slug)}`]: answerMap[answer][1],
         };
       },
       {}
@@ -56,6 +59,7 @@ const Playlist: React.FC = () => {
 
   useEffect(() => {
     if (!recommendations?.tracks?.length) return;
+    if (tooFewRecommendations) return;
     if (seeds.size >= targetSize) {
       setView("tune");
       setSeedsDrawerOpen(true);
@@ -70,10 +74,19 @@ const Playlist: React.FC = () => {
 
       select(track)();
     } catch (e) {
+      console.error(e);
       render();
     }
   }, [render.tick, seeds.size, recommendations]);
 
+  if (tooFewRecommendations) {
+    return (
+      <HStack>
+        <Box>Sorry, too few recommendations.</Box>
+        <ClearButton closeParent={() => {}} confirm={false} icon={false} />
+      </HStack>
+    );
+  }
   return (
     <Box>
       {seeds.size !== 0 && <Seeds />}

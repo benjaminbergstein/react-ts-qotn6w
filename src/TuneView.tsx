@@ -4,7 +4,7 @@ import { Box, HStack, Text, VStack } from "@chakra-ui/react";
 import { useWildMode, useSeeds, useRecommendations } from "./hooks";
 
 import Navbar from "./Navbar";
-import Seeds from "./Seeds";
+import Seeds from "./SeedsV2";
 import Item from "./Item";
 import ItemSkeleton from "./ItemSkeleton";
 import Start from "./Start";

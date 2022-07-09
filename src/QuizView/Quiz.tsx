@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useRef } from "react";
 import {
   Text,
-  Heading,
   Button,
   VStack,
   Flex,
@@ -12,12 +11,9 @@ import {
 
 import { useQuizSelections, useQuizStep } from "../hooks";
 import { QuestionType } from "../types";
+import { questions } from "./questions";
 
-const Question: FC<QuestionType> = ({
-  slug,
-  title,
-  labels = ["Less", "Neutral", "High"],
-}) => {
+const Question: FC<QuestionType> = ({ slug, low, high }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [quizSelections, setQuizSelections] = useQuizSelections();
 
@@ -35,38 +31,26 @@ const Question: FC<QuestionType> = ({
 
   return (
     <VStack spacing="20px" ref={containerRef}>
-      <Heading size="md">{title}</Heading>
-      <Heading color="gray.600" size="xs">
-        (1 = less {slug}, 5 = more {slug})
-      </Heading>
       <ButtonGroup isAttached>
-        {new Array(3).fill("").map((_, idx) => (
-          <Button
-            colorScheme="pink"
-            onClick={handleClick(idx)}
-            variant={quizSelections[slug] === idx ? "solid" : "outline"}
-          >
-            {labels[idx] || idx + 1}
-          </Button>
-        ))}
+        <Button
+          colorScheme="pink"
+          onClick={handleClick("low")}
+          variant={quizSelections[slug] === "low" ? "solid" : "outline"}
+        >
+          {low}
+        </Button>
+        <Button
+          colorScheme="pink"
+          onClick={handleClick("high")}
+          variant={quizSelections[slug] === "high" ? "solid" : "outline"}
+        >
+          {high}
+        </Button>
       </ButtonGroup>
       <Divider />
     </VStack>
   );
 };
-
-const questions: QuestionType[] = [
-  { slug: "danceability", title: "How Dance-y" },
-  { slug: "energy", title: "How energetic?" },
-  { slug: "tempo", title: "What tempo?" },
-  { slug: "valence", title: "How positive feeling?" },
-  { slug: "popularity", title: "How popular?" },
-  {
-    slug: "size",
-    title: "How many tracks?",
-    labels: ["10", "25", "50"],
-  },
-];
 
 const Quiz: React.FC = () => {
   const [quizSelections] = useQuizSelections();
@@ -98,7 +82,7 @@ const Quiz: React.FC = () => {
         </Box>
         <Divider />
         {questions.map((question) => (
-          <Question {...question} />
+          <Question key={question.slug} {...question} />
         ))}
         {isComplete && (
           <Box pb={8} width="100%">

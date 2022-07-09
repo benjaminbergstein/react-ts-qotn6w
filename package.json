@@ -49,8 +49,7 @@
     "ts-node": "^10.4.0",
     "unfetch": "^4.2.0",
     "urql": "^2.2.0",
-    "uuid": "^8.3.2",
-    "wrangler": "^0.0.22"
+    "uuid": "^8.3.2"
   },
   "engines": {
     "node": ">=16.14.2"
@@ -64,10 +63,14 @@
     "build": "yarn build:server && yarn build:react && yarn render && yarn build:service-worker",
     "build:dev": "HOST=localhost:3000 PROTOCOL=\"http:\" yarn build",
     "build:react": "react-scripts build",
+    "build:module": "yarn tsc -p $MODULE/tsconfig.json",
     "build:server": "yarn tsc -p server/tsconfig.json",
+    "build:cron": "MODULE=cron yarn build:module",
     "build:service-worker": "yarn tsc -p service-worker/tsconfig.json",
+    "watch:module": "yarn tsc-watch -p $MODULE/tsconfig.json",
     "watch:server": "yarn tsc-watch -p server/tsconfig.json",
     "watch:service-worker": "yarn tsc-watch -p service-worker/tsconfig.json",
+    "watch:cron": "MODULE=cron yarn watch:module",
     "start:functions": "yarn wrangler pages dev functions --kv ROAMTUNES",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
@@ -75,7 +78,8 @@
     "gql:generate": "graphql-codegen --config codegen.yml"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.4.0",
+    "@cloudflare/workers-types": "^3.5.1",
+    "@cloudflare/wrangler": "^1.19.12",
     "@graphql-codegen/cli": "2.6.2",
     "@graphql-codegen/introspection": "2.1.1",
     "@graphql-codegen/typescript": "^2.4.8",
@@ -84,6 +88,7 @@
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "babel-plugin-inline-import": "^3.0.0",
+    "date-fns": "^2.28.0",
     "eslint": "^8.6.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-functional": "^4.1.1",
@@ -95,6 +100,7 @@
     "graphql": "^16.3.0",
     "http-server": "^14.1.0",
     "isomorphic-unfetch": "^3.1.0",
+    "miniflare": "^2.4.0",
     "prettier": "2.5.1",
     "raw-loader": "^4.0.2",
     "react-scripts": "latest",
